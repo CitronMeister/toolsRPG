@@ -1,0 +1,4 @@
+# Maximum level for a tool (default = 20)
+max-level: 20
+# XP multiplier (default = 1.0)
+default-xp-multiplier: 1.0

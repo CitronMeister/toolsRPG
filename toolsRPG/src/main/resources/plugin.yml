@@ -4,3 +4,26 @@ main: org.shyni.toolsRPG.ToolsRPG
 api-version: '1.21'
 authors: [ Shyni ]
 description: First Plugin
+
+
+commands:
+#  command:
+#    description: "this is a command"
+#    usage: "/command <arg>"
+#    aliases: [ cmd, command ]
+#    permission: permission.node
+#    permission-message: "You do not have permission to use this command"
+  toolsrpg:
+    description: "ToolsRPG command"
+    usage: "/toolsRPG"
+    permission: toolsrpg.admin
+
+permissions:
+#  permission.node:
+#    description: "this is a permission node"
+#    default: op
+#    children:
+#      permission.node.child: true
+#  another.permission.node:
+#    description: "this is another description"
+#    default: not op
