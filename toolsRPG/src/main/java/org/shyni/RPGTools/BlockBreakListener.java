@@ -1,10 +1,10 @@
-package org.shyni.toolsRPG;
+package org.shyni.RPGTools;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,8 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public class BlockBreakListener implements Listener {
     @EventHandler
@@ -26,7 +26,7 @@ public class BlockBreakListener implements Listener {
 
         if(BlockXpData.shouldGiveXp(tool, block)) {
             System.out.println("you broke: " + block);
-            addEnchantment(player, tool, block);
+            UpdateItem(player, tool, block);
             ItemStack item = player.getInventory().getItemInMainHand();
             ItemMeta meta = item.getItemMeta();
             if (meta != null) {
@@ -68,7 +68,7 @@ public class BlockBreakListener implements Listener {
 
 
     }
-    public void addEnchantment(Player player, Material tool, Material block) {
+    public void UpdateItem(Player player, Material tool, Material block) {
         // TODO: Add option to combine levels when repairing
 
         ItemStack item = player.getInventory().getItemInMainHand();
@@ -76,22 +76,27 @@ public class BlockBreakListener implements Listener {
 
         if (meta == null) return;
 
-        // Increment blocks broken
-        int brokenBlocks = meta.getPersistentDataContainer().getOrDefault(Keys.BLOCKS_BROKEN, PersistentDataType.INTEGER, 0);
-        brokenBlocks++;
-        meta.getPersistentDataContainer().set(Keys.BLOCKS_BROKEN, PersistentDataType.INTEGER, brokenBlocks);
-
         // XP & Level
         int currentXp = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
         int currentLevel = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 0);
 
         currentXp = currentXp + BlockXpData.getXpMultiplier(tool, block) * (int) Math.floor(ToolsSettings.getInstance().getDefaultXpMultiplier()); // XP per block broken
-//        currentXp++; // XP per block
+        //currentXp++; // XP per block
         int xpForNext = getXpForNextLevel(currentLevel);
 
         if (currentXp >= xpForNext) {
             currentXp -= xpForNext;
             currentLevel++;
+
+            // set Enchantments
+            Map<Enchantment, Integer> enchants = ToolsSettings.getInstance()
+                    .getEnchantmentsForLevel(ToolType.fromMaterial(tool), currentLevel);
+
+            for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
+                meta.addEnchant(entry.getKey(), entry.getValue(), true);
+                System.out.println("Applying enchants for " + tool + " at level " + currentLevel + ": " + enchants);
+            }
+
 
             // Notify player
             player.sendMessage(Component.text("Your tool leveled up to " + currentLevel + "!")
@@ -105,12 +110,29 @@ public class BlockBreakListener implements Listener {
         meta.getPersistentDataContainer().set(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, currentLevel);
 
         // Display name and lore
-        meta.displayName(Component.text("Custom Item")
-                .color(NamedTextColor.GOLD)
-                .decorate(TextDecoration.BOLD));
-
+        String itemRarity = "";
+        NamedTextColor rarityColor = NamedTextColor.GRAY;
+        // TODO: Make this mess a method of its own
+        if(currentLevel >= ToolsSettings.getInstance().getMaxLevel()) {
+            itemRarity = "✮✮✮✮✮";
+            rarityColor = NamedTextColor.GOLD;
+        } else if (currentLevel >= (int) Math.floor((ToolsSettings.getInstance().getMaxLevel() / 5.0) * 4)) {
+            itemRarity = "✮✮✮✮☆";
+            rarityColor = NamedTextColor.LIGHT_PURPLE;
+        }else if (currentLevel >= (int) Math.floor((ToolsSettings.getInstance().getMaxLevel() / 5.0) * 3)) {
+            itemRarity = "✮✮✮☆☆";
+            rarityColor = NamedTextColor.BLUE;
+        } else if (currentLevel >= (int) Math.floor((ToolsSettings.getInstance().getMaxLevel() / 5.0) * 2)) {
+            itemRarity = "✮✮☆☆☆";
+            rarityColor = NamedTextColor.AQUA;
+        }else if (currentLevel >= (int) Math.floor((ToolsSettings.getInstance().getMaxLevel() / 5.0) * 1)) {
+            itemRarity = "✮☆☆☆☆";
+            rarityColor = NamedTextColor.GREEN;
+        } else {
+            itemRarity = "☆☆☆☆☆";
+        }
         meta.lore(List.of(
-                Component.text("This is a custom item").color(NamedTextColor.GRAY),
+                Component.text(itemRarity).color(rarityColor),
 //                Component.text("Blocks broken: " + brokenBlocks).color(NamedTextColor.YELLOW),
                 Component.text("Level: " + currentLevel + "/" + ToolsSettings.getInstance().getMaxLevel()).color(NamedTextColor.AQUA),
                 Component.text("XP: " + currentXp + "/" + xpForNext).color(NamedTextColor.GREEN)
@@ -131,7 +153,7 @@ public class BlockBreakListener implements Listener {
     }
     public boolean acceptedTool(Player player) {
         Material type = player.getInventory().getItemInMainHand().getType();
-        //TODO : MAKE WEAPONS AND TOOLS SEPERATE!
+        //TODO : MAKE WEAPONS AND TOOLS SEPARATE!
         return switch (type) {
             case WOODEN_AXE, STONE_AXE, IRON_AXE, GOLDEN_AXE, DIAMOND_AXE, NETHERITE_AXE,
                  WOODEN_PICKAXE, STONE_PICKAXE, IRON_PICKAXE, GOLDEN_PICKAXE, DIAMOND_PICKAXE, NETHERITE_PICKAXE,

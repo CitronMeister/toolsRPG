@@ -1,9 +1,9 @@
-name: toolsRPG
+name: RPGTools
 version: '1.0.0'
-main: org.shyni.toolsRPG.ToolsRPG
+main: org.shyni.RPGTools.RPGTools
 api-version: '1.21'
 authors: [ Shyni ]
-description: First Plugin
+description: Plugin that allows leveling tools!
 
 
 commands:
@@ -13,10 +13,10 @@ commands:
 #    aliases: [ cmd, command ]
 #    permission: permission.node
 #    permission-message: "You do not have permission to use this command"
-  toolsrpg:
-    description: "ToolsRPG command"
-    usage: "/toolsRPG"
-    permission: toolsrpg.admin
+  rpgtools:
+    description: "rpgtools command"
+    usage: "/rpgtools [givexp/levelup] [<amount>]"
+    permission: rpgtools.admin
 
 permissions:
 #  permission.node:

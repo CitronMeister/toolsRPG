@@ -1,8 +1,7 @@
-package org.shyni.toolsRPG;
+package org.shyni.RPGTools;
 
 import org.bukkit.Material;
 
-import javax.tools.Tool;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +31,7 @@ public class BlockXpData {
 
     static {
         /* TODO LIST:
-            1. add all default blocks
+            1. add all default blocks ✓
             2. add ability to add more in a config file
 
         * */

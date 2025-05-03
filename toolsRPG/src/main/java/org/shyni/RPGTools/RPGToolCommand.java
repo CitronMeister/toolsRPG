@@ -1,0 +1,120 @@
+package org.shyni.RPGTools;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Sound;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Map;
+
+public class RPGToolCommand implements CommandExecutor, TabExecutor {
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage("Only players can use this command.");
+            return true;
+        }
+
+        if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+            ToolsSettings.getInstance().load();
+            sender.sendMessage(Component.text("ToolsRPG reloaded!").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD));
+            return true;
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("givexp")) {
+            if (!sender.hasPermission("toolsrpg.admin")) {
+                sender.sendMessage(Component.text("You don’t have permission to use this.").color(NamedTextColor.RED));
+                return true;
+            }
+
+            int xpToAdd;
+            try {
+                xpToAdd = Integer.parseInt(args[1]);
+            } catch (NumberFormatException e) {
+                sender.sendMessage(Component.text("Invalid XP amount.").color(NamedTextColor.RED));
+                return true;
+            }
+
+            ItemStack item = player.getInventory().getItemInMainHand();
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null) return true;
+
+            int currentXp = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
+            int level = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 1);
+            int newXp = currentXp + xpToAdd;
+
+            meta.getPersistentDataContainer().set(Keys.TOOL_XP, PersistentDataType.INTEGER, newXp);
+            item.setItemMeta(meta);
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+            sender.sendMessage(Component.text("Gave " + xpToAdd + " XP to tool.").color(NamedTextColor.GREEN));
+            return true;
+        }
+
+        if (args.length == 1 && args[0].equalsIgnoreCase("levelup")) {
+            if (!sender.hasPermission("toolsrpg.admin")) {
+                sender.sendMessage(Component.text("You don’t have permission to use this.").color(NamedTextColor.RED));
+                return true;
+            }
+
+            ItemStack item = player.getInventory().getItemInMainHand();
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null) return true;
+
+            int level = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 1);
+            level++;
+
+            meta.getPersistentDataContainer().set(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, level);
+            meta.getPersistentDataContainer().set(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
+
+            // Apply enchantments
+            Map<Enchantment, Integer> enchants = ToolsSettings.getInstance()
+                    .getEnchantmentsForLevel(ToolType.fromMaterial(item.getType()), level);
+
+            for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
+                meta.addEnchant(entry.getKey(), entry.getValue(), true);
+            }
+
+            item.setItemMeta(meta);
+
+            player.sendMessage(Component.text("Leveled tool up to level " + level + "!").color(NamedTextColor.GOLD));
+            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
+
+            return true;
+        }
+
+        sender.sendMessage(Component.text("Usage:")
+                .appendNewline().append(Component.text("/toolsrpg reload"))
+                .appendNewline().append(Component.text("/toolsrpg givexp <amount>"))
+                .appendNewline().append(Component.text("/toolsrpg levelup"))
+                .color(NamedTextColor.YELLOW));
+        return true;
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+        if(args.length == 1){
+            if(sender.hasPermission("toolsrpg.admin")){
+                return List.of("reload", "givexp", "levelup");
+            } else {return List.of();}
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("givexp")) {
+            if (sender.hasPermission("toolsrpg.admin")) {
+                return List.of("<amount>");
+            }
+        }
+
+        return List.of();
+    }
+}

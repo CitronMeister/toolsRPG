@@ -1,4 +1,377 @@
-# Maximum level for a tool (default = 20)
+# Maximum level for a tool only whole numbers (e.g 5, 12, 21, 25, 100)
+# default = 20
 max-level: 20
-# XP multiplier (default = 1.0)
-default-xp-multiplier: 1.0
+# XP multiplier only whole numbers (e.g 5, 12, 21, 25, 100)
+# default = 1
+default-xp-multiplier: 1
+
+
+# input any enchantment from the following list: https://jd.papermc.io/paper/1.21.5/org/bukkit/enchantments/Enchantment.html
+Level_Enchantments:
+  PICKAXE:
+    1:
+      EFFICIENCY: 1
+    2:
+      EFFICIENCY: 1
+      UNBREAKING: 1
+    3:
+      EFFICIENCY: 1
+      UNBREAKING: 1
+      FORTUNE: 1
+    4:
+      EFFICIENCY: 2
+      UNBREAKING: 1
+      FORTUNE: 1
+    5:
+      EFFICIENCY: 2
+      UNBREAKING: 2
+      FORTUNE: 1
+    6:
+      EFFICIENCY: 2
+      UNBREAKING: 2
+      FORTUNE: 2
+    7:
+      EFFICIENCY: 3
+      UNBREAKING: 2
+      FORTUNE: 2
+    8:
+      EFFICIENCY: 3
+      UNBREAKING: 3
+      FORTUNE: 2
+    9:
+      EFFICIENCY: 3
+      UNBREAKING: 3
+      FORTUNE: 3
+    10:
+      EFFICIENCY: 3
+      UNBREAKING: 3
+      FORTUNE: 3
+      MENDING: 1
+    11:
+      EFFICIENCY: 4
+      UNBREAKING: 3
+      FORTUNE: 3
+      MENDING: 1
+    12:
+      EFFICIENCY: 4
+      UNBREAKING: 4
+      FORTUNE: 3
+      MENDING: 1
+    13:
+      EFFICIENCY: 5
+      UNBREAKING: 4
+      FORTUNE: 3
+      MENDING: 1
+    14:
+      EFFICIENCY: 5
+      UNBREAKING: 5
+      FORTUNE: 3
+      MENDING: 1
+    15:
+      EFFICIENCY: 6
+      UNBREAKING: 5
+      FORTUNE: 3
+      MENDING: 1
+    16:
+      EFFICIENCY: 6
+      UNBREAKING: 6
+      FORTUNE: 4
+      MENDING: 1
+    17:
+      EFFICIENCY: 7
+      UNBREAKING: 7
+      FORTUNE: 4
+      MENDING: 1
+    18:
+      EFFICIENCY: 8
+      UNBREAKING: 8
+      FORTUNE: 4
+      MENDING: 1
+    19:
+      EFFICIENCY: 9
+      UNBREAKING: 9
+      FORTUNE: 4
+      MENDING: 1
+    20:
+      EFFICIENCY: 10
+      UNBREAKING: 10
+      FORTUNE: 5
+      MENDING: 1
+  SHOVEL:
+    1:
+      EFFICIENCY: 1
+    2:
+      EFFICIENCY: 1
+      UNBREAKING: 1
+    3:
+      EFFICIENCY: 1
+      UNBREAKING: 1
+      FORTUNE: 1
+    4:
+      EFFICIENCY: 2
+      UNBREAKING: 1
+      FORTUNE: 1
+    5:
+      EFFICIENCY: 2
+      UNBREAKING: 2
+      FORTUNE: 1
+    6:
+      EFFICIENCY: 2
+      UNBREAKING: 2
+      FORTUNE: 2
+    7:
+      EFFICIENCY: 3
+      UNBREAKING: 2
+      FORTUNE: 2
+    8:
+      EFFICIENCY: 3
+      UNBREAKING: 3
+      FORTUNE: 2
+    9:
+      EFFICIENCY: 3
+      UNBREAKING: 3
+      FORTUNE: 3
+    10:
+      EFFICIENCY: 3
+      UNBREAKING: 3
+      FORTUNE: 3
+      MENDING: 1
+    11:
+      EFFICIENCY: 4
+      UNBREAKING: 3
+      FORTUNE: 3
+      MENDING: 1
+    12:
+      EFFICIENCY: 4
+      UNBREAKING: 4
+      FORTUNE: 3
+      MENDING: 1
+    13:
+      EFFICIENCY: 5
+      UNBREAKING: 4
+      FORTUNE: 3
+      MENDING: 1
+    14:
+      EFFICIENCY: 5
+      UNBREAKING: 5
+      FORTUNE: 3
+      MENDING: 1
+    15:
+      EFFICIENCY: 6
+      UNBREAKING: 5
+      FORTUNE: 3
+      MENDING: 1
+    16:
+      EFFICIENCY: 6
+      UNBREAKING: 6
+      FORTUNE: 4
+      MENDING: 1
+    17:
+      EFFICIENCY: 7
+      UNBREAKING: 7
+      FORTUNE: 4
+      MENDING: 1
+    18:
+      EFFICIENCY: 8
+      UNBREAKING: 8
+      FORTUNE: 4
+      MENDING: 1
+    19:
+      EFFICIENCY: 9
+      UNBREAKING: 9
+      FORTUNE: 4
+      MENDING: 1
+    20:
+      EFFICIENCY: 10
+      UNBREAKING: 10
+      FORTUNE: 5
+      MENDING: 1
+  AXE:
+    1:
+      EFFICIENCY: 1
+    2:
+      EFFICIENCY: 1
+      UNBREAKING: 1
+    3:
+      EFFICIENCY: 1
+      UNBREAKING: 1
+      FORTUNE: 1
+    4:
+      EFFICIENCY: 2
+      UNBREAKING: 1
+      FORTUNE: 1
+    5:
+      EFFICIENCY: 2
+      UNBREAKING: 2
+      FORTUNE: 1
+    6:
+      EFFICIENCY: 2
+      UNBREAKING: 2
+      FORTUNE: 2
+    7:
+      EFFICIENCY: 3
+      UNBREAKING: 2
+      FORTUNE: 2
+    8:
+      EFFICIENCY: 3
+      UNBREAKING: 3
+      FORTUNE: 2
+    9:
+      EFFICIENCY: 3
+      UNBREAKING: 3
+      FORTUNE: 3
+    10:
+      EFFICIENCY: 3
+      UNBREAKING: 3
+      FORTUNE: 3
+      MENDING: 1
+    11:
+      EFFICIENCY: 4
+      UNBREAKING: 3
+      FORTUNE: 3
+      MENDING: 1
+    12:
+      EFFICIENCY: 4
+      UNBREAKING: 4
+      FORTUNE: 3
+      MENDING: 1
+    13:
+      EFFICIENCY: 5
+      UNBREAKING: 4
+      FORTUNE: 3
+      MENDING: 1
+    14:
+      EFFICIENCY: 5
+      UNBREAKING: 5
+      FORTUNE: 3
+      MENDING: 1
+    15:
+      EFFICIENCY: 6
+      UNBREAKING: 5
+      FORTUNE: 3
+      MENDING: 1
+    16:
+      EFFICIENCY: 6
+      UNBREAKING: 6
+      FORTUNE: 4
+      MENDING: 1
+    17:
+      EFFICIENCY: 7
+      UNBREAKING: 7
+      FORTUNE: 4
+      MENDING: 1
+    18:
+      EFFICIENCY: 8
+      UNBREAKING: 8
+      FORTUNE: 4
+      MENDING: 1
+    19:
+      EFFICIENCY: 9
+      UNBREAKING: 9
+      FORTUNE: 4
+      MENDING: 1
+    20:
+      EFFICIENCY: 10
+      UNBREAKING: 10
+      FORTUNE: 5
+      MENDING: 1
+  HOE:
+    1:
+      EFFICIENCY: 1
+    2:
+      EFFICIENCY: 1
+      UNBREAKING: 1
+    3:
+      EFFICIENCY: 1
+      UNBREAKING: 1
+      FORTUNE: 1
+    4:
+      EFFICIENCY: 2
+      UNBREAKING: 1
+      FORTUNE: 1
+    5:
+      EFFICIENCY: 2
+      UNBREAKING: 2
+      FORTUNE: 1
+    6:
+      EFFICIENCY: 2
+      UNBREAKING: 2
+      FORTUNE: 2
+    7:
+      EFFICIENCY: 3
+      UNBREAKING: 2
+      FORTUNE: 2
+    8:
+      EFFICIENCY: 3
+      UNBREAKING: 3
+      FORTUNE: 2
+    9:
+      EFFICIENCY: 3
+      UNBREAKING: 3
+      FORTUNE: 3
+    10:
+      EFFICIENCY: 3
+      UNBREAKING: 3
+      FORTUNE: 3
+      MENDING: 1
+    11:
+      EFFICIENCY: 4
+      UNBREAKING: 3
+      FORTUNE: 3
+      MENDING: 1
+    12:
+      EFFICIENCY: 4
+      UNBREAKING: 4
+      FORTUNE: 3
+      MENDING: 1
+    13:
+      EFFICIENCY: 5
+      UNBREAKING: 4
+      FORTUNE: 3
+      MENDING: 1
+    14:
+      EFFICIENCY: 5
+      UNBREAKING: 5
+      FORTUNE: 3
+      MENDING: 1
+    15:
+      EFFICIENCY: 6
+      UNBREAKING: 5
+      FORTUNE: 3
+      MENDING: 1
+    16:
+      EFFICIENCY: 6
+      UNBREAKING: 6
+      FORTUNE: 4
+      MENDING: 1
+    17:
+      EFFICIENCY: 7
+      UNBREAKING: 7
+      FORTUNE: 4
+      MENDING: 1
+    18:
+      EFFICIENCY: 8
+      UNBREAKING: 8
+      FORTUNE: 4
+      MENDING: 1
+    19:
+      EFFICIENCY: 9
+      UNBREAKING: 9
+      FORTUNE: 4
+      MENDING: 1
+    20:
+      EFFICIENCY: 10
+      UNBREAKING: 10
+      FORTUNE: 5
+      MENDING: 1
+  SWORD:
+    1:
+    2:
+    3:
+    4:
+    5:
+    6:
+    7:
+    8:
+    9:
+    10:
