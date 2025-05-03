@@ -1,0 +1,6 @@
+name: toolsRPG
+version: '1.0.0'
+main: org.shyni.toolsRPG.ToolsRPG
+api-version: '1.21'
+authors: [ Shyni ]
+description: First Plugin
