@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,11 +32,11 @@ public class BlockBreakListener implements Listener {
                 int xp = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
                 int level = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 1);
                 int xpToLevel = getXpForNextLevel(level);
-                sendXpActionBar(player, xp, xpToLevel, level);
+                System.out.println(level);
+                if (level < ToolsSettings.getInstance().getMaxLevel()){
+                    sendXpActionBar(player, xp, xpToLevel, level);
+                }
             }
-
-
-
         }
     }
     public void sendXpActionBar(Player player, int currentXp, int xpToLevel, int level) {
@@ -66,90 +67,95 @@ public class BlockBreakListener implements Listener {
 
 
     }
-    public void UpdateItem(Player player, Material tool, Material block) {
-        // TODO: Add option to combine levels when repairing
 
+    public void UpdateItem(Player player, Material tool, Material block) {
         ItemStack item = player.getInventory().getItemInMainHand();
         ItemMeta meta = item.getItemMeta();
-
         if (meta == null) return;
 
-        // XP & Level
         int currentXp = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
         int currentLevel = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 0);
+        int maxLevel = ToolsSettings.getInstance().getMaxLevel();
 
-        currentXp = currentXp + BlockXpData.getXpMultiplier(tool, block) * (int) Math.floor(ToolsSettings.getInstance().getDefaultXpMultiplier()); // XP per block broken
-        //currentXp++; // XP per block
+        // Ensure the name is always gold and bold at max level
+        if (currentLevel >= maxLevel) {
+            Component displayName = meta.hasDisplayName()
+                    ? meta.displayName()
+                    : Component.translatable(item.translationKey()); // fallback to default name
+
+            Component updatedName = displayName.color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD);
+            meta.displayName(updatedName);
+        }
+
+
+        currentXp += BlockXpData.getXpMultiplier(tool, block) * (int) Math.floor(ToolsSettings.getInstance().getDefaultXpMultiplier());
         int xpForNext = getXpForNextLevel(currentLevel);
 
-        if (currentXp >= xpForNext) {
+        if (currentLevel < maxLevel && currentXp >= xpForNext) {
             currentXp -= xpForNext;
             currentLevel++;
 
-            // set Enchantments
             Map<Enchantment, Integer> enchants = ToolsSettings.getInstance()
                     .getEnchantmentsForLevel(ToolType.fromMaterial(tool), currentLevel);
 
             for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
                 Enchantment enchantment = entry.getKey();
                 int newLevel = entry.getValue();
+                int currentEnchantLevel = meta.hasEnchant(enchantment) ? meta.getEnchantLevel(enchantment) : 0;
 
-                int currentEnchantLevel = meta.hasEnchant(enchantment)
-                        ? meta.getEnchantLevel(enchantment)
-                        : 0;
-
-                // Only apply if new level is higher than existing
                 if (newLevel > currentEnchantLevel) {
                     meta.addEnchant(enchantment, newLevel, true);
-//                    System.out.println("Applied enchant " + enchantment.getKey().getKey() + " at level " + newLevel);
                 }
             }
 
-
-            // Notify player
             player.sendMessage(Component.text("Your tool leveled up to " + currentLevel + "!")
                     .color(NamedTextColor.GOLD)
                     .decorate(TextDecoration.BOLD));
             player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
         }
 
-        // Save updated XP and level
         meta.getPersistentDataContainer().set(Keys.TOOL_XP, PersistentDataType.INTEGER, currentXp);
         meta.getPersistentDataContainer().set(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, currentLevel);
 
-        // Display name and lore
-        String itemRarity = "";
-        NamedTextColor rarityColor = NamedTextColor.GRAY;
-        // TODO: Make this mess a method of its own
-        if(currentLevel >= ToolsSettings.getInstance().getMaxLevel()) {
+        // Rarity display
+        String itemRarity;
+        NamedTextColor rarityColor;
+        if (currentLevel >= maxLevel) {
             itemRarity = "✮✮✮✮✮";
             rarityColor = NamedTextColor.GOLD;
-        } else if (currentLevel >= (int) Math.floor((ToolsSettings.getInstance().getMaxLevel() / 5.0) * 4)) {
+        } else if (currentLevel >= maxLevel * 4 / 5) {
             itemRarity = "✮✮✮✮☆";
             rarityColor = NamedTextColor.LIGHT_PURPLE;
-        }else if (currentLevel >= (int) Math.floor((ToolsSettings.getInstance().getMaxLevel() / 5.0) * 3)) {
+        } else if (currentLevel >= maxLevel * 3 / 5) {
             itemRarity = "✮✮✮☆☆";
             rarityColor = NamedTextColor.BLUE;
-        } else if (currentLevel >= (int) Math.floor((ToolsSettings.getInstance().getMaxLevel() / 5.0) * 2)) {
+        } else if (currentLevel >= maxLevel * 2 / 5) {
             itemRarity = "✮✮☆☆☆";
             rarityColor = NamedTextColor.AQUA;
-        }else if (currentLevel >= (int) Math.floor((ToolsSettings.getInstance().getMaxLevel() / 5.0) * 1)) {
+        } else if (currentLevel >= maxLevel / 5) {
             itemRarity = "✮☆☆☆☆";
             rarityColor = NamedTextColor.GREEN;
         } else {
             itemRarity = "☆☆☆☆☆";
+            rarityColor = NamedTextColor.GRAY;
         }
-        meta.lore(List.of(
-                Component.text(itemRarity).color(rarityColor),
-//                Component.text("Blocks broken: " + brokenBlocks).color(NamedTextColor.YELLOW),
-                Component.text("Level: " + currentLevel + "/" + ToolsSettings.getInstance().getMaxLevel()).color(NamedTextColor.AQUA),
-                Component.text("XP: " + currentXp + "/" + xpForNext).color(NamedTextColor.GREEN)
-        ));
 
+        // Build lore dynamically
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text(itemRarity).color(rarityColor));
+        lore.add(Component.text("Level: " + currentLevel + "/" + maxLevel).color(NamedTextColor.AQUA));
+
+        if (currentLevel < maxLevel) {
+            lore.add(Component.text("XP: " + currentXp + "/" + xpForNext).color(NamedTextColor.GREEN));
+        }
+
+        meta.lore(lore);
         item.setItemMeta(meta);
     }
+
     public void blockWhitelist() {
         // logic that checks up against a list to see if the block should give XP
+        // currently not in use since I use BlockXpData class instead
     }
     public int getXpForNextLevel(int level) {
         if(level == 0){
@@ -159,6 +165,7 @@ public class BlockBreakListener implements Listener {
         }
 
     }
+    // deprecated
     public boolean acceptedTool(Player player) {
         Material type = player.getInventory().getItemInMainHand().getType();
         //TODO : MAKE WEAPONS AND TOOLS SEPARATE!

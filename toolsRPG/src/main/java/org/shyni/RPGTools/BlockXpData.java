@@ -80,20 +80,20 @@ public class BlockXpData {
         register(ToolType.PICKAXE, Material.NETHER_GOLD_ORE, 2.0);
 
         // AXE
-        register(ToolType.AXE, Material.OAK_LOG, 1.0);
-        register(ToolType.AXE, Material.SPRUCE_LOG, 1.0);
-        register(ToolType.AXE, Material.BIRCH_LOG, 1.0);
-        register(ToolType.AXE, Material.JUNGLE_LOG, 1.0);
-        register(ToolType.AXE, Material.ACACIA_LOG, 1.0);
-        register(ToolType.AXE, Material.DARK_OAK_LOG, 1.0);
-        register(ToolType.AXE, Material.MANGROVE_LOG, 1.0);
-        register(ToolType.AXE, Material.CHERRY_LOG, 1.0);
-        register(ToolType.AXE, Material.PALE_OAK_LOG, 1.0);
-        register(ToolType.AXE, Material.BAMBOO, 1.0);
-        register(ToolType.AXE, Material.CRIMSON_STEM, 1.0);
-        register(ToolType.AXE, Material.WARPED_STEM, 1.0);
-        register(ToolType.AXE, Material.MELON, 1.0);
-        register(ToolType.AXE, Material.PUMPKIN, 1.0);
+        register(ToolType.AXE, Material.OAK_LOG, 5.0);
+        register(ToolType.AXE, Material.SPRUCE_LOG, 5.0);
+        register(ToolType.AXE, Material.BIRCH_LOG, 5.0);
+        register(ToolType.AXE, Material.JUNGLE_LOG, 5.0);
+        register(ToolType.AXE, Material.ACACIA_LOG, 5.0);
+        register(ToolType.AXE, Material.DARK_OAK_LOG, 5.0);
+        register(ToolType.AXE, Material.MANGROVE_LOG, 5.0);
+        register(ToolType.AXE, Material.CHERRY_LOG, 5.0);
+        register(ToolType.AXE, Material.PALE_OAK_LOG, 5.0);
+        register(ToolType.AXE, Material.BAMBOO, 5.0);
+        register(ToolType.AXE, Material.CRIMSON_STEM, 5.0);
+        register(ToolType.AXE, Material.WARPED_STEM, 5.0);
+        register(ToolType.AXE, Material.MELON, 2.0);
+        register(ToolType.AXE, Material.PUMPKIN, 2.0);
 
 
         // SHOVEL
