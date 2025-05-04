@@ -19,13 +19,11 @@ import java.util.Map;
 public class BlockBreakListener implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        System.out.println(acceptedTool(event.getPlayer()));
         Player player = event.getPlayer();
         Material block = event.getBlock().getType();
         Material tool = player.getInventory().getItemInMainHand().getType();
 
         if(BlockXpData.shouldGiveXp(tool, block)) {
-            System.out.println("you broke: " + block);
             UpdateItem(player, tool, block);
             ItemStack item = player.getInventory().getItemInMainHand();
             ItemMeta meta = item.getItemMeta();
@@ -93,8 +91,18 @@ public class BlockBreakListener implements Listener {
                     .getEnchantmentsForLevel(ToolType.fromMaterial(tool), currentLevel);
 
             for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
-                meta.addEnchant(entry.getKey(), entry.getValue(), true);
-                System.out.println("Applying enchants for " + tool + " at level " + currentLevel + ": " + enchants);
+                Enchantment enchantment = entry.getKey();
+                int newLevel = entry.getValue();
+
+                int currentEnchantLevel = meta.hasEnchant(enchantment)
+                        ? meta.getEnchantLevel(enchantment)
+                        : 0;
+
+                // Only apply if new level is higher than existing
+                if (newLevel > currentEnchantLevel) {
+                    meta.addEnchant(enchantment, newLevel, true);
+//                    System.out.println("Applied enchant " + enchantment.getKey().getKey() + " at level " + newLevel);
+                }
             }
 
 

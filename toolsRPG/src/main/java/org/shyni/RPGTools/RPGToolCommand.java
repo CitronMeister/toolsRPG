@@ -83,7 +83,18 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                     .getEnchantmentsForLevel(ToolType.fromMaterial(item.getType()), level);
 
             for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
-                meta.addEnchant(entry.getKey(), entry.getValue(), true);
+                Enchantment enchantment = entry.getKey();
+                int newLevel = entry.getValue();
+
+                int currentEnchantLevel = meta.hasEnchant(enchantment)
+                        ? meta.getEnchantLevel(enchantment)
+                        : 0;
+
+                // Only apply if new level is higher than existing
+                if (newLevel > currentEnchantLevel) {
+                    meta.addEnchant(enchantment, newLevel, true);
+                    System.out.println("Applied enchant " + enchantment.getKey().getKey() + " at level " + newLevel);
+                }
             }
 
             item.setItemMeta(meta);
