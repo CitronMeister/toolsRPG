@@ -1,8 +1,10 @@
-package org.shyni.RPGTools;
+package org.shyni.RPGTools.Settings;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.shyni.RPGTools.RPGTools;
+import org.shyni.RPGTools.util.ToolType;
 
 import java.io.File;
 import java.util.*;

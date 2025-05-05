@@ -1,4 +1,4 @@
-package org.shyni.RPGTools;
+package org.shyni.RPGTools.util;
 
 import org.bukkit.Material;
 
@@ -95,7 +95,6 @@ public class BlockXpData {
         register(ToolType.AXE, Material.MELON, 2.0);
         register(ToolType.AXE, Material.PUMPKIN, 2.0);
 
-
         // SHOVEL
         register(ToolType.SHOVEL, Material.GRASS_BLOCK, 1.0);
         register(ToolType.SHOVEL, Material.COARSE_DIRT, 1.0);
@@ -123,7 +122,6 @@ public class BlockXpData {
         register(ToolType.HOE, Material.SHROOMLIGHT, 2.0);
         register(ToolType.HOE, Material.HAY_BLOCK, 1.0);
         register(ToolType.HOE, Material.MOSS_BLOCK, 1.0);
-
 
         // SWORD
         register(ToolType.SWORD, Material.COBWEB, 1.0);

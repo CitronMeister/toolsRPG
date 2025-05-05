@@ -1,4 +1,4 @@
-package org.shyni.RPGTools;
+package org.shyni.RPGTools.Listeners;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -12,6 +12,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.shyni.RPGTools.util.BlockXpData;
+import org.shyni.RPGTools.util.Keys;
+import org.shyni.RPGTools.util.ToolType;
+import org.shyni.RPGTools.Settings.ToolsSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,16 +66,16 @@ public class BlockBreakListener implements Listener {
                 bar = bar.append(Component.text("|", i < filledBars ? NamedTextColor.GREEN : NamedTextColor.DARK_GRAY));
             }
             player.sendActionBar(bar);
-
         }
-
-
     }
 
     public void UpdateItem(Player player, Material tool, Material block) {
         ItemStack item = player.getInventory().getItemInMainHand();
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
+
+        ToolType type = ToolType.fromMaterial(item.getType());
+        if (type == null || type.isWeapon()) return;
 
         int currentXp = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
         int currentLevel = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 0);
@@ -163,7 +167,6 @@ public class BlockBreakListener implements Listener {
         } else {
             return (int) Math.floor(100 * Math.pow(1.6, level));
         }
-
     }
     // deprecated
     public boolean acceptedTool(Player player) {
