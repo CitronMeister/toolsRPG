@@ -124,7 +124,10 @@ public class LevelManager {
 
         updateLore(meta, currentLevel, xpForNext, currentXp, maxLevel);
         item.setItemMeta(meta);
-        ActionBarUtil.sendXpActionBar(player, currentXp, xpForNext, currentLevel, true);
+        if(currentLevel < maxLevel){
+            ActionBarUtil.sendXpActionBar(player, currentXp, xpForNext, currentLevel, true);
+        }
+
     }
 
     public static int getXpForNextLevel(int currentLevel) {

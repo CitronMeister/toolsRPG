@@ -32,14 +32,18 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
         }
 
         if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+            if (!sender.hasPermission("rpgtools.admin")) {
+                sender.sendMessage(Component.text("You don’t have permission to use this.").color(NamedTextColor.RED));
+                return true;
+            }
             ToolsSettings.getInstance().load();
             MobXpData.getInstance().load();
-            sender.sendMessage(Component.text("ToolsRPG reloaded!").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD));
+            sender.sendMessage(Component.text("RPGTools reloaded!").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD));
             return true;
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("givexp")) {
-            if (!sender.hasPermission("toolsrpg.admin")) {
+            if (!sender.hasPermission("rpgtools.admin")) {
                 sender.sendMessage(Component.text("You don’t have permission to use this.").color(NamedTextColor.RED));
                 return true;
             }
@@ -83,21 +87,32 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
             }
         }
 
-        if (args.length == 1 && args[0].equalsIgnoreCase("levelup")) {
-            if (!sender.hasPermission("toolsrpg.admin")) {
+        if (args.length >= 1 && args[0].equalsIgnoreCase("levelup")) {
+            if (!sender.hasPermission("rpgtools.admin")) {
                 sender.sendMessage(Component.text("You don’t have permission to use this.").color(NamedTextColor.RED));
                 return true;
             }
-
+            int levelsToAdd = 1;
             ItemStack item = player.getInventory().getItemInMainHand();
             ItemMeta meta = item.getItemMeta();
             if (meta == null) return true;
+
+            if (args.length == 2) {
+                try {
+                    levelsToAdd = Math.max(1, Integer.parseInt(args[1]));
+                } catch (NumberFormatException e) {
+                    sender.sendMessage(Component.text("Invalid level amount.").color(NamedTextColor.RED));
+                    return true;
+                }
+            }
+
             // check if weapon or tool
             ToolType type = ToolType.fromMaterial(item.getType());
             // WEAPON
             if (type != null && type.isWeapon()){
                 int level = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_LEVEL, PersistentDataType.INTEGER, 1);
-                level++;
+
+                level += levelsToAdd;
 
                 meta.getPersistentDataContainer().set(Keys.WEAPON_LEVEL, PersistentDataType.INTEGER, level);
                 meta.getPersistentDataContainer().set(Keys.WEAPON_XP, PersistentDataType.INTEGER, 0);
@@ -122,14 +137,15 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                 }
 
                 item.setItemMeta(meta);
-                player.sendMessage(Component.text("Leveled tool up to level " + level + "!").color(NamedTextColor.GOLD));
+                player.sendMessage(Component.text("Leveled weapon up to level " + level + "!").color(NamedTextColor.GOLD));
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
 
                 return true;
             // TOOL
-            } else if(type != null) {
+            }
+            else if(type != null) {
                 int level = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 1);
-                level++;
+                level += levelsToAdd;
 
                 meta.getPersistentDataContainer().set(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, level);
                 meta.getPersistentDataContainer().set(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
@@ -161,23 +177,37 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
             }
         }
 
-        sender.sendMessage(Component.text("Usage:")
-                .appendNewline().append(Component.text("/toolsrpg reload"))
-                .appendNewline().append(Component.text("/toolsrpg givexp <amount>"))
-                .appendNewline().append(Component.text("/toolsrpg levelup"))
-                .color(NamedTextColor.YELLOW));
+
+        if(sender.hasPermission("rpgtools.admin") || sender.isOp()){
+            sender.sendMessage(Component.text("Usage:")
+                    .appendNewline().append(Component.text("/rpgtools help"))
+                    .appendNewline().append(Component.text("/rpgtools reload"))
+                    .appendNewline().append(Component.text("/rpgtools givexp <amount>"))
+                    .appendNewline().append(Component.text("/rpgtools levelup <amount>"))
+                    .color(NamedTextColor.YELLOW));
+        } else {
+            sender.sendMessage(Component.text("Usage:")
+                    .appendNewline().append(Component.text("/rpgtools help"))
+                    .color(NamedTextColor.YELLOW));
+        }
+
         return true;
     }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if(args.length == 1){
-            if(sender.hasPermission("toolsrpg.admin")){
+            if(sender.hasPermission("rpgtools.admin")){
                 return List.of("reload", "givexp", "levelup");
-            } else {return List.of();}
+            } else {return List.of("help");}
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("givexp")) {
-            if (sender.hasPermission("toolsrpg.admin")) {
+            if (sender.hasPermission("rpgtools.admin")) {
+                return List.of("<amount>");
+            }
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("levelup")) {
+            if (sender.hasPermission("rpgtools.admin")) {
                 return List.of("<amount>");
             }
         }
