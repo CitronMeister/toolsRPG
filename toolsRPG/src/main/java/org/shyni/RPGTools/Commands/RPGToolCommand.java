@@ -56,15 +56,31 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
             ItemMeta meta = item.getItemMeta();
             if (meta == null) return true;
 
-            int currentXp = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
-            int level = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 1);
-            int newXp = currentXp + xpToAdd;
 
-            meta.getPersistentDataContainer().set(Keys.TOOL_XP, PersistentDataType.INTEGER, newXp);
-            item.setItemMeta(meta);
-            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
-            sender.sendMessage(Component.text("Gave " + xpToAdd + " XP to tool.").color(NamedTextColor.GREEN));
-            return true;
+            // check if weapon or tool
+            ToolType type = ToolType.fromMaterial(item.getType());
+            if (type != null && type.isWeapon()) {
+                int currentXp = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_XP, PersistentDataType.INTEGER, 0);
+                int level = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_LEVEL, PersistentDataType.INTEGER, 1);
+                int newXp = currentXp + xpToAdd;
+
+                meta.getPersistentDataContainer().set(Keys.WEAPON_XP, PersistentDataType.INTEGER, newXp);
+                item.setItemMeta(meta);
+                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+                sender.sendMessage(Component.text("Gave " + xpToAdd + " XP to weapon.").color(NamedTextColor.GREEN));
+                return true;
+
+            } else if(type != null) {
+                int currentXp = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
+                int level = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 1);
+                int newXp = currentXp + xpToAdd;
+
+                meta.getPersistentDataContainer().set(Keys.TOOL_XP, PersistentDataType.INTEGER, newXp);
+                item.setItemMeta(meta);
+                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+                sender.sendMessage(Component.text("Gave " + xpToAdd + " XP to tool.").color(NamedTextColor.GREEN));
+                return true;
+            }
         }
 
         if (args.length == 1 && args[0].equalsIgnoreCase("levelup")) {
@@ -76,38 +92,73 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
             ItemStack item = player.getInventory().getItemInMainHand();
             ItemMeta meta = item.getItemMeta();
             if (meta == null) return true;
+            // check if weapon or tool
+            ToolType type = ToolType.fromMaterial(item.getType());
+            // WEAPON
+            if (type != null && type.isWeapon()){
+                int level = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_LEVEL, PersistentDataType.INTEGER, 1);
+                level++;
 
-            int level = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 1);
-            level++;
+                meta.getPersistentDataContainer().set(Keys.WEAPON_LEVEL, PersistentDataType.INTEGER, level);
+                meta.getPersistentDataContainer().set(Keys.WEAPON_XP, PersistentDataType.INTEGER, 0);
 
-            meta.getPersistentDataContainer().set(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, level);
-            meta.getPersistentDataContainer().set(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
+                // Apply enchantments
+                Map<Enchantment, Integer> enchants = ToolsSettings.getInstance()
+                        .getEnchantmentsForLevel(ToolType.fromMaterial(item.getType()), level);
 
-            // Apply enchantments
-            Map<Enchantment, Integer> enchants = ToolsSettings.getInstance()
-                    .getEnchantmentsForLevel(ToolType.fromMaterial(item.getType()), level);
+                for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
+                    Enchantment enchantment = entry.getKey();
+                    int newLevel = entry.getValue();
 
-            for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
-                Enchantment enchantment = entry.getKey();
-                int newLevel = entry.getValue();
+                    int currentEnchantLevel = meta.hasEnchant(enchantment)
+                            ? meta.getEnchantLevel(enchantment)
+                            : 0;
 
-                int currentEnchantLevel = meta.hasEnchant(enchantment)
-                        ? meta.getEnchantLevel(enchantment)
-                        : 0;
-
-                // Only apply if new level is higher than existing
-                if (newLevel > currentEnchantLevel) {
-                    meta.addEnchant(enchantment, newLevel, true);
-                    System.out.println("Applied enchant " + enchantment.getKey().getKey() + " at level " + newLevel);
+                    // Only apply if new level is higher than existing
+                    if (newLevel > currentEnchantLevel) {
+                        meta.addEnchant(enchantment, newLevel, true);
+                        System.out.println("Applied enchant " + enchantment.getKey().getKey() + " at level " + newLevel);
+                    }
                 }
+
+                item.setItemMeta(meta);
+                player.sendMessage(Component.text("Leveled tool up to level " + level + "!").color(NamedTextColor.GOLD));
+                player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
+
+                return true;
+            // TOOL
+            } else if(type != null) {
+                int level = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 1);
+                level++;
+
+                meta.getPersistentDataContainer().set(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, level);
+                meta.getPersistentDataContainer().set(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
+
+                // Apply enchantments
+                Map<Enchantment, Integer> enchants = ToolsSettings.getInstance()
+                        .getEnchantmentsForLevel(ToolType.fromMaterial(item.getType()), level);
+
+                for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
+                    Enchantment enchantment = entry.getKey();
+                    int newLevel = entry.getValue();
+
+                    int currentEnchantLevel = meta.hasEnchant(enchantment)
+                            ? meta.getEnchantLevel(enchantment)
+                            : 0;
+
+                    // Only apply if new level is higher than existing
+                    if (newLevel > currentEnchantLevel) {
+                        meta.addEnchant(enchantment, newLevel, true);
+                        System.out.println("Applied enchant " + enchantment.getKey().getKey() + " at level " + newLevel);
+                    }
+                }
+
+                item.setItemMeta(meta);
+                player.sendMessage(Component.text("Leveled tool up to level " + level + "!").color(NamedTextColor.GOLD));
+                player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
+
+                return true;
             }
-
-            item.setItemMeta(meta);
-
-            player.sendMessage(Component.text("Leveled tool up to level " + level + "!").color(NamedTextColor.GOLD));
-            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
-
-            return true;
         }
 
         sender.sendMessage(Component.text("Usage:")
