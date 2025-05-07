@@ -5,10 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.persistence.PersistentDataType;
-import org.shyni.RPGTools.WeaponLevelManager;
+import org.shyni.RPGTools.LevelManager;
 import org.shyni.RPGTools.util.ActionBarUtil;
-import org.shyni.RPGTools.util.Keys;
+
 
 public class MobKillListener implements Listener {
 
@@ -17,8 +16,7 @@ public class MobKillListener implements Listener {
         LivingEntity entity = event.getEntity();
         Player killer = entity.getKiller();
         if (killer != null) {
-            WeaponLevelManager.handleKill(killer, entity);
-
+            LevelManager.updateWeaponItem(killer, entity);
             // Do something when the player kills a mob
             killer.sendMessage("You killed a " + event.getEntity().getType().name());
         }

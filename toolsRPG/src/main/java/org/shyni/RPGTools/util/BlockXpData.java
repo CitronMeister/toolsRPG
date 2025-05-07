@@ -25,7 +25,6 @@ public class BlockXpData {
         if (toolType == null) return 0;
 
         double multiplier = xpMap.getOrDefault(toolType, Map.of()).getOrDefault(block, 0.0);
-        System.out.println("xp before rounding " + Math.round(multiplier));
         return (int) Math.round(multiplier);
     }
 

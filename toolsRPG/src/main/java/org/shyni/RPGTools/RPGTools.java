@@ -5,6 +5,7 @@ import org.shyni.RPGTools.Commands.RPGToolCommand;
 import org.shyni.RPGTools.Listeners.BlockBreakListener;
 import org.shyni.RPGTools.Listeners.MobKillListener;
 import org.shyni.RPGTools.Settings.ToolsSettings;
+import org.shyni.RPGTools.util.MobXpData;
 
 public final class RPGTools extends JavaPlugin {
 
@@ -20,6 +21,7 @@ public final class RPGTools extends JavaPlugin {
 
         // Load config on plugin enable
         ToolsSettings.getInstance().load();
+        MobXpData.getInstance().load();
     }
 
     @Override

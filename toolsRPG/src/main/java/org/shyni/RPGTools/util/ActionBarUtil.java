@@ -30,7 +30,6 @@ public class ActionBarUtil {
                 bar = bar.append(Component.text("|", i < filledBars ? NamedTextColor.GREEN : NamedTextColor.DARK_GRAY));
             }
         }
-
         player.sendActionBar(bar);
     }
 }

@@ -16,6 +16,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.shyni.RPGTools.util.Keys;
+import org.shyni.RPGTools.util.MobXpData;
 import org.shyni.RPGTools.util.ToolType;
 import org.shyni.RPGTools.Settings.ToolsSettings;
 
@@ -32,6 +33,7 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
 
         if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
             ToolsSettings.getInstance().load();
+            MobXpData.getInstance().load();
             sender.sendMessage(Component.text("ToolsRPG reloaded!").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD));
             return true;
         }
