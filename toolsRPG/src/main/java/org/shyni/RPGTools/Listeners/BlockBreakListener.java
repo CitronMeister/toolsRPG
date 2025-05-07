@@ -1,10 +1,5 @@
 package org.shyni.RPGTools.Listeners;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,17 +7,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.shyni.RPGTools.LevelManager;
+import org.shyni.RPGTools.util.LevelManager;
 import org.shyni.RPGTools.util.ActionBarUtil;
 import org.shyni.RPGTools.util.BlockXpData;
 import org.shyni.RPGTools.util.Keys;
-import org.shyni.RPGTools.util.ToolType;
 import org.shyni.RPGTools.Settings.ToolsSettings;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
 
 public class BlockBreakListener implements Listener {
     @EventHandler

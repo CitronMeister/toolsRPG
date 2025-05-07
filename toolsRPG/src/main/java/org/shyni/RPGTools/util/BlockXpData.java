@@ -58,72 +58,69 @@ public class BlockXpData {
         register(ToolType.PICKAXE, Material.SMOOTH_BASALT, 1.0);
 
         //Pickaxe ores
-        register(ToolType.PICKAXE, Material.COAL_ORE, 2.0);
-        register(ToolType.PICKAXE, Material.IRON_ORE, 3.0);
-        register(ToolType.PICKAXE, Material.GOLD_ORE, 3.0);
-        register(ToolType.PICKAXE, Material.DIAMOND_ORE, 10.0);
-        register(ToolType.PICKAXE, Material.EMERALD_ORE, 15.0);
-        register(ToolType.PICKAXE, Material.LAPIS_ORE, 2.0);
-        register(ToolType.PICKAXE, Material.REDSTONE_ORE, 2.0);
-        register(ToolType.PICKAXE, Material.COPPER_ORE, 2.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_COPPER_ORE, 2.0);
-        register(ToolType.PICKAXE, Material.NETHER_QUARTZ_ORE, 2.0);
-        register(ToolType.PICKAXE, Material.ANCIENT_DEBRIS, 20.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_COAL_ORE, 2.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_IRON_ORE, 3.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_GOLD_ORE, 3.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_DIAMOND_ORE, 10.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_EMERALD_ORE, 15.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_LAPIS_ORE, 2.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_REDSTONE_ORE, 2.0);
-        register(ToolType.PICKAXE, Material.NETHER_GOLD_ORE, 2.0);
+        register(ToolType.PICKAXE, Material.COAL_ORE, 5.0);
+        register(ToolType.PICKAXE, Material.IRON_ORE, 10.0);
+        register(ToolType.PICKAXE, Material.GOLD_ORE, 10.0);
+        register(ToolType.PICKAXE, Material.DIAMOND_ORE, 50.0);
+        register(ToolType.PICKAXE, Material.EMERALD_ORE, 75.0);
+        register(ToolType.PICKAXE, Material.LAPIS_ORE, 5.0);
+        register(ToolType.PICKAXE, Material.REDSTONE_ORE, 5.0);
+        register(ToolType.PICKAXE, Material.COPPER_ORE, 5.0);
+        register(ToolType.PICKAXE, Material.DEEPSLATE_COPPER_ORE, 6.0);
+        register(ToolType.PICKAXE, Material.NETHER_QUARTZ_ORE, 6.0);
+        register(ToolType.PICKAXE, Material.ANCIENT_DEBRIS, 100.0);
+        register(ToolType.PICKAXE, Material.DEEPSLATE_COAL_ORE, 6.0);
+        register(ToolType.PICKAXE, Material.DEEPSLATE_IRON_ORE, 12.0);
+        register(ToolType.PICKAXE, Material.DEEPSLATE_GOLD_ORE, 12.0);
+        register(ToolType.PICKAXE, Material.DEEPSLATE_DIAMOND_ORE, 60.0);
+        register(ToolType.PICKAXE, Material.DEEPSLATE_EMERALD_ORE, 90.0);
+        register(ToolType.PICKAXE, Material.DEEPSLATE_LAPIS_ORE, 6.0);
+        register(ToolType.PICKAXE, Material.DEEPSLATE_REDSTONE_ORE, 6.0);
+        register(ToolType.PICKAXE, Material.NETHER_GOLD_ORE, 3.0);
 
         // AXE
-        register(ToolType.AXE, Material.OAK_LOG, 5.0);
-        register(ToolType.AXE, Material.SPRUCE_LOG, 5.0);
-        register(ToolType.AXE, Material.BIRCH_LOG, 5.0);
-        register(ToolType.AXE, Material.JUNGLE_LOG, 5.0);
-        register(ToolType.AXE, Material.ACACIA_LOG, 5.0);
-        register(ToolType.AXE, Material.DARK_OAK_LOG, 5.0);
-        register(ToolType.AXE, Material.MANGROVE_LOG, 5.0);
-        register(ToolType.AXE, Material.CHERRY_LOG, 5.0);
-        register(ToolType.AXE, Material.PALE_OAK_LOG, 5.0);
+        register(ToolType.AXE, Material.OAK_LOG, 10.0);
+        register(ToolType.AXE, Material.SPRUCE_LOG, 10.0);
+        register(ToolType.AXE, Material.BIRCH_LOG, 10.0);
+        register(ToolType.AXE, Material.JUNGLE_LOG, 10.0);
+        register(ToolType.AXE, Material.ACACIA_LOG, 10.0);
+        register(ToolType.AXE, Material.DARK_OAK_LOG, 10.0);
+        register(ToolType.AXE, Material.MANGROVE_LOG, 10.0);
+        register(ToolType.AXE, Material.CHERRY_LOG, 10.0);
+        register(ToolType.AXE, Material.PALE_OAK_LOG, 10.0);
         register(ToolType.AXE, Material.BAMBOO, 5.0);
-        register(ToolType.AXE, Material.CRIMSON_STEM, 5.0);
-        register(ToolType.AXE, Material.WARPED_STEM, 5.0);
-        register(ToolType.AXE, Material.MELON, 2.0);
-        register(ToolType.AXE, Material.PUMPKIN, 2.0);
+        register(ToolType.AXE, Material.CRIMSON_STEM, 12.0);
+        register(ToolType.AXE, Material.WARPED_STEM, 12.0);
+        register(ToolType.AXE, Material.MELON, 3.0);
+        register(ToolType.AXE, Material.PUMPKIN, 3.0);
 
         // SHOVEL
-        register(ToolType.SHOVEL, Material.GRASS_BLOCK, 1.0);
+        register(ToolType.SHOVEL, Material.GRASS_BLOCK, 2.0);
         register(ToolType.SHOVEL, Material.COARSE_DIRT, 1.0);
         register(ToolType.SHOVEL, Material.DIRT_PATH, 1.0);
-        register(ToolType.SHOVEL, Material.MUD, 1.0);
-        register(ToolType.SHOVEL, Material.MYCELIUM, 1.0);
-        register(ToolType.SHOVEL, Material.PODZOL, 1.0);
-        register(ToolType.SHOVEL, Material.RED_SAND, 1.0);
+        register(ToolType.SHOVEL, Material.MUD, 2.0);
+        register(ToolType.SHOVEL, Material.MYCELIUM, 2.0);
+        register(ToolType.SHOVEL, Material.PODZOL, 2.0);
+        register(ToolType.SHOVEL, Material.RED_SAND, 2.0);
         register(ToolType.SHOVEL, Material.SAND, 1.0);
         register(ToolType.SHOVEL, Material.SNOW_BLOCK, 1.0);
-        register(ToolType.SHOVEL, Material.SOUL_SAND, 1.0);
-        register(ToolType.SHOVEL, Material.SOUL_SOIL, 1.0);
+        register(ToolType.SHOVEL, Material.SOUL_SAND, 5.0);
+        register(ToolType.SHOVEL, Material.SOUL_SOIL, 5.0);
         register(ToolType.SHOVEL, Material.DIRT, 1.0);
-        register(ToolType.SHOVEL, Material.GRAVEL, 1.0);
+        register(ToolType.SHOVEL, Material.GRAVEL, 2.0);
 
         // HOE
         register(ToolType.HOE, Material.SHORT_GRASS, 1.0);
-        register(ToolType.HOE, Material.TALL_GRASS, 1.0);
-        register(ToolType.HOE, Material.SCULK, 1.0);
-        register(ToolType.HOE, Material.SCULK_SHRIEKER, 5.0);
-        register(ToolType.HOE, Material.SCULK_SENSOR, 3.0);
-        register(ToolType.HOE, Material.SCULK_CATALYST, 5.0);
-        register(ToolType.HOE, Material.NETHER_WART_BLOCK, 2.0);
-        register(ToolType.HOE, Material.WARPED_WART_BLOCK, 2.0);
-        register(ToolType.HOE, Material.SHROOMLIGHT, 2.0);
-        register(ToolType.HOE, Material.HAY_BLOCK, 1.0);
-        register(ToolType.HOE, Material.MOSS_BLOCK, 1.0);
-
-        // SWORD
-        register(ToolType.SWORD, Material.COBWEB, 1.0);
+        register(ToolType.HOE, Material.TALL_GRASS, 2.0);
+        register(ToolType.HOE, Material.SCULK, 3.0);
+        register(ToolType.HOE, Material.SCULK_SHRIEKER, 10.0);
+        register(ToolType.HOE, Material.SCULK_SENSOR, 6.0);
+        register(ToolType.HOE, Material.SCULK_CATALYST, 10.0);
+        register(ToolType.HOE, Material.NETHER_WART_BLOCK, 4.0);
+        register(ToolType.HOE, Material.WARPED_WART_BLOCK, 4.0);
+        register(ToolType.HOE, Material.SHROOMLIGHT, 4.0);
+        register(ToolType.HOE, Material.HAY_BLOCK, 2.0);
+        register(ToolType.HOE, Material.MOSS_BLOCK, 2.0);
     }
 }
 

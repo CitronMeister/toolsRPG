@@ -5,8 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.shyni.RPGTools.LevelManager;
-import org.shyni.RPGTools.util.ActionBarUtil;
+import org.shyni.RPGTools.util.LevelManager;
 
 
 public class MobKillListener implements Listener {
