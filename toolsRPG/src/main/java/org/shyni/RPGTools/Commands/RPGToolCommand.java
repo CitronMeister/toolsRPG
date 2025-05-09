@@ -177,6 +177,45 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
             }
         }
 
+        if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
+            if(sender.hasPermission("rpgtools.admin") || sender.isOp()){
+                sender.sendMessage(Component.textOfChildren(
+                        Component.text("RPGTools", NamedTextColor.AQUA, TextDecoration.BOLD),
+                        Component.newline(),
+                        Component.text("A tool and weapon leveling system that rewards usage with XP, levels, and enchantments.", NamedTextColor.GRAY),
+                        Component.newline(),
+                        Component.newline(),
+                        Component.text("Commands:", NamedTextColor.GOLD, TextDecoration.BOLD),
+                        Component.newline(),
+                        Component.text("/rpgtools help", NamedTextColor.YELLOW),
+                        Component.text(" - Show this help menu", NamedTextColor.GRAY),
+                        Component.newline(),
+                        Component.text("/rpgtools levelup [amount]", NamedTextColor.YELLOW),
+                        Component.text(" - Instantly level up your tool/weapon", NamedTextColor.GRAY),
+                        Component.newline(),
+                        Component.text("/rpgtools givexp [amount]", NamedTextColor.YELLOW),
+                        Component.text(" - Give XP to your tool/weapon", NamedTextColor.GRAY),
+                        Component.newline(),
+                        Component.newline(),
+                        Component.text("Use your tools and weapons to gain XP and unlock custom enchantments as you level up!", NamedTextColor.DARK_GREEN)
+                ));
+            } else {
+                sender.sendMessage(Component.textOfChildren(
+                        Component.text("RPGTools", NamedTextColor.AQUA, TextDecoration.BOLD),
+                        Component.newline(),
+                        Component.text("A tool and weapon leveling system that rewards usage with XP, levels, and enchantments.", NamedTextColor.GRAY),
+                        Component.newline(),
+                        Component.newline(),
+                        Component.text("Commands:", NamedTextColor.GOLD, TextDecoration.BOLD),
+                        Component.newline(),
+                        Component.text("/rpgtools help", NamedTextColor.YELLOW),
+                        Component.text(" - Show this help menu", NamedTextColor.GRAY),
+                        Component.newline(),
+                        Component.newline(),
+                        Component.text("Use your tools and weapons to gain XP and unlock custom enchantments as you level up!", NamedTextColor.DARK_GREEN)
+                ));
+            }
+        }
 
         if(sender.hasPermission("rpgtools.admin") || sender.isOp()){
             sender.sendMessage(Component.text("Usage:")
