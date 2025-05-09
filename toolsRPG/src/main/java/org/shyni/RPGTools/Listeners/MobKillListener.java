@@ -17,7 +17,6 @@ public class MobKillListener implements Listener {
         if (killer != null) {
             LevelManager.updateWeaponItem(killer, entity);
             // Do something when the player kills a mob
-            killer.sendMessage("You killed a " + event.getEntity().getType().name());
         }
     }
 }
