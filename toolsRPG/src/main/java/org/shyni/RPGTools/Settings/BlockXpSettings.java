@@ -1,26 +1,27 @@
-package org.shyni.RPGTools.util;
+package org.shyni.RPGTools.Settings;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.shyni.RPGTools.RPGTools;
+import org.shyni.RPGTools.util.ToolType;
 
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BlockXpData {
+public class BlockXpSettings {
 
-    private static final BlockXpData instance = new BlockXpData();
+    private static final BlockXpSettings instance = new BlockXpSettings();
 
     private final Map<ToolType, Map<Material, Double>> xpMap = new HashMap<>();
 
     private File file;
     private YamlConfiguration config;
 
-    private BlockXpData() {}
+    private BlockXpSettings() {}
 
     public void load() {
         file = new File(RPGTools.getInstance().getDataFolder(), "blocks.yml");
@@ -80,7 +81,7 @@ public class BlockXpData {
         return (int) Math.round(value);
     }
 
-    public static BlockXpData getInstance() {
+    public static BlockXpSettings getInstance() {
         return instance;
     }
 }

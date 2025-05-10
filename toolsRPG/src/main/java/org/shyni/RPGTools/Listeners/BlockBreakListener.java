@@ -9,7 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.shyni.RPGTools.util.LevelManager;
 import org.shyni.RPGTools.util.ActionBarUtil;
-import org.shyni.RPGTools.util.BlockXpData;
+import org.shyni.RPGTools.Settings.BlockXpSettings;
 import org.shyni.RPGTools.util.Keys;
 import org.shyni.RPGTools.Settings.ToolsSettings;
 
@@ -20,7 +20,7 @@ public class BlockBreakListener implements Listener {
         Material block = event.getBlock().getType();
         Material tool = player.getInventory().getItemInMainHand().getType();
 
-        if(BlockXpData.getInstance().shouldGiveXp(tool, block)) {
+        if(BlockXpSettings.getInstance().shouldGiveXp(tool, block)) {
             LevelManager.updateToolItem(player, tool, block);
             ItemStack item = player.getInventory().getItemInMainHand();
             ItemMeta meta = item.getItemMeta();

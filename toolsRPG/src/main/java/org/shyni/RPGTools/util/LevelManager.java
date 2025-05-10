@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.shyni.RPGTools.Settings.BlockXpSettings;
 import org.shyni.RPGTools.Settings.ToolsSettings;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class LevelManager {
             meta.displayName(updatedName);
         }
 
-        currentXp += BlockXpData.getInstance().getXpMultiplier(tool, block) * ToolsSettings.getInstance().getXpGainMultiplier();
+        currentXp += BlockXpSettings.getInstance().getXpMultiplier(tool, block) * ToolsSettings.getInstance().getXpGainMultiplier();
         int xpForNext = getXpForNextLevel(currentLevel);
 
         if (currentLevel < maxLevel && currentXp >= xpForNext) {
