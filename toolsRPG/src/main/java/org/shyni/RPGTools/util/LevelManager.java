@@ -70,6 +70,11 @@ public class LevelManager {
 
         updateLore(meta, type);
         item.setItemMeta(meta);
+        // Send actionbar
+        if(currentLevel < maxLevel){
+            ActionBarUtil.sendXpActionBar(player, currentXp, xpForNext, currentLevel, true);
+        }
+
     }
 
     public static void updateWeaponItem(Player player, LivingEntity killedType) {

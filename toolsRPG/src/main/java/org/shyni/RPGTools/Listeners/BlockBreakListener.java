@@ -22,16 +22,6 @@ public class BlockBreakListener implements Listener {
 
         if(BlockXpSettings.getInstance().shouldGiveXp(tool, block)) {
             LevelManager.updateToolItem(player, tool, block);
-            ItemStack item = player.getInventory().getItemInMainHand();
-            ItemMeta meta = item.getItemMeta();
-            if (meta != null) {
-                int xp = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
-                int level = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 1);
-                int xpToLevel = LevelManager.getXpForNextLevel(level);
-                if (level < ToolsSettings.getInstance().getMaxLevel()){
-                    ActionBarUtil.sendXpActionBar(player, xp, xpToLevel, level, true);
-                }
-            }
         }
     }
 }
