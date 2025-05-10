@@ -3,6 +3,7 @@ package org.shyni.RPGTools.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -16,6 +17,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.shyni.RPGTools.util.Keys;
+import org.shyni.RPGTools.util.LevelManager;
 import org.shyni.RPGTools.util.MobXpData;
 import org.shyni.RPGTools.util.ToolType;
 import org.shyni.RPGTools.Settings.ToolsSettings;
@@ -60,32 +62,54 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
             ItemMeta meta = item.getItemMeta();
             if (meta == null) return true;
 
-
-            // check if weapon or tool
             ToolType type = ToolType.fromMaterial(item.getType());
-            if (type != null && type.isWeapon()) {
-                int currentXp = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_XP, PersistentDataType.INTEGER, 0);
-                int level = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_LEVEL, PersistentDataType.INTEGER, 1);
-                int newXp = currentXp + xpToAdd;
+            if (type == null) return true;
 
-                meta.getPersistentDataContainer().set(Keys.WEAPON_XP, PersistentDataType.INTEGER, newXp);
-                item.setItemMeta(meta);
-                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
-                sender.sendMessage(Component.text("Gave " + xpToAdd + " XP to weapon.").color(NamedTextColor.GREEN));
-                return true;
+            boolean isWeapon = type.isWeapon();
+            NamespacedKey levelKey = isWeapon ? Keys.WEAPON_LEVEL : Keys.TOOL_LEVEL;
+            NamespacedKey xpKey = isWeapon ? Keys.WEAPON_XP : Keys.TOOL_XP;
+            String itemType = isWeapon ? "weapon" : "tool";
 
-            } else if(type != null) {
-                int currentXp = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
-                int level = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 1);
-                int newXp = currentXp + xpToAdd;
+            int level = meta.getPersistentDataContainer().getOrDefault(levelKey, PersistentDataType.INTEGER, 1);
+            int xp = meta.getPersistentDataContainer().getOrDefault(xpKey, PersistentDataType.INTEGER, 0);
+            int maxLevel = ToolsSettings.getInstance().getMaxLevel();
 
-                meta.getPersistentDataContainer().set(Keys.TOOL_XP, PersistentDataType.INTEGER, newXp);
-                item.setItemMeta(meta);
-                player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
-                sender.sendMessage(Component.text("Gave " + xpToAdd + " XP to tool.").color(NamedTextColor.GREEN));
-                return true;
+            xp += xpToAdd;
+
+            while (level < maxLevel && xp >= LevelManager.getXpForNextLevel(level)) {
+                xp -= LevelManager.getXpForNextLevel(level);
+                level++;
+
+                // Apply new enchantments if any
+                Map<Enchantment, Integer> enchants = ToolsSettings.getInstance()
+                        .getEnchantmentsForLevel(type, level);
+
+                for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
+                    Enchantment enchantment = entry.getKey();
+                    int newLevel = entry.getValue();
+
+                    int currentEnchantLevel = meta.hasEnchant(enchantment)
+                            ? meta.getEnchantLevel(enchantment)
+                            : 0;
+
+                    if (newLevel > currentEnchantLevel) {
+                        meta.addEnchant(enchantment, newLevel, true);
+                    }
+                }
             }
+
+            meta.getPersistentDataContainer().set(levelKey, PersistentDataType.INTEGER, level);
+            meta.getPersistentDataContainer().set(xpKey, PersistentDataType.INTEGER, xp);
+            LevelManager.updateLore(meta, level, LevelManager.getXpForNextLevel(level), xp, maxLevel);
+
+            item.setItemMeta(meta);
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
+            sender.sendMessage(Component.text("Gave " + xpToAdd + " XP to " + itemType + ".").color(NamedTextColor.GREEN));
+
+            return true;
         }
+
+
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("levelup")) {
             if (!sender.hasPermission("rpgtools.admin")) {
@@ -95,6 +119,8 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
             int levelsToAdd = 1;
             ItemStack item = player.getInventory().getItemInMainHand();
             ItemMeta meta = item.getItemMeta();
+            int maxLevel = ToolsSettings.getInstance().getMaxLevel();
+
             if (meta == null) return true;
 
             if (args.length == 2) {
@@ -132,10 +158,9 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                     // Only apply if new level is higher than existing
                     if (newLevel > currentEnchantLevel) {
                         meta.addEnchant(enchantment, newLevel, true);
-                        System.out.println("Applied enchant " + enchantment.getKey().getKey() + " at level " + newLevel);
                     }
                 }
-
+                LevelManager.updateLore(meta, level, LevelManager.getXpForNextLevel(level), 0, maxLevel);
                 item.setItemMeta(meta);
                 player.sendMessage(Component.text("Leveled weapon up to level " + level + "!").color(NamedTextColor.GOLD));
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
@@ -165,10 +190,9 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                     // Only apply if new level is higher than existing
                     if (newLevel > currentEnchantLevel) {
                         meta.addEnchant(enchantment, newLevel, true);
-                        System.out.println("Applied enchant " + enchantment.getKey().getKey() + " at level " + newLevel);
                     }
                 }
-
+                LevelManager.updateLore(meta, level, LevelManager.getXpForNextLevel(level), 0, maxLevel);
                 item.setItemMeta(meta);
                 player.sendMessage(Component.text("Leveled tool up to level " + level + "!").color(NamedTextColor.GOLD));
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
@@ -196,6 +220,9 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                         Component.text("/rpgtools givexp [amount]", NamedTextColor.YELLOW),
                         Component.text(" - Give XP to your tool/weapon", NamedTextColor.GRAY),
                         Component.newline(),
+                        Component.text("/rpgtools reload", NamedTextColor.YELLOW),
+                        Component.text(" - reload the settings.yml", NamedTextColor.GRAY),
+                        Component.newline(),
                         Component.newline(),
                         Component.text("Use your tools and weapons to gain XP and unlock custom enchantments as you level up!", NamedTextColor.DARK_GREEN)
                 ));
@@ -215,6 +242,7 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                         Component.text("Use your tools and weapons to gain XP and unlock custom enchantments as you level up!", NamedTextColor.DARK_GREEN)
                 ));
             }
+            return true;
         }
 
         if(sender.hasPermission("rpgtools.admin") || sender.isOp()){

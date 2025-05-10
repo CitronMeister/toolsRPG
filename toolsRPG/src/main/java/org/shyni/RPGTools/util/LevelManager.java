@@ -138,7 +138,7 @@ public class LevelManager {
         }
     }
 
-    private static void updateLore(ItemMeta meta, int level, int xpForNext, int currentXp, int maxLevel) {
+    public static void updateLore(ItemMeta meta, int level, int xpForNext, int currentXp, int maxLevel) {
         String itemRarity;
         NamedTextColor rarityColor;
 
