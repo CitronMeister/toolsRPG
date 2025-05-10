@@ -100,7 +100,7 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
 
             meta.getPersistentDataContainer().set(levelKey, PersistentDataType.INTEGER, level);
             meta.getPersistentDataContainer().set(xpKey, PersistentDataType.INTEGER, xp);
-            LevelManager.updateLore(meta, level, LevelManager.getXpForNextLevel(level), xp, maxLevel);
+            LevelManager.updateLore(meta, type);
 
             item.setItemMeta(meta);
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
@@ -160,7 +160,7 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                         meta.addEnchant(enchantment, newLevel, true);
                     }
                 }
-                LevelManager.updateLore(meta, level, LevelManager.getXpForNextLevel(level), 0, maxLevel);
+                LevelManager.updateLore(meta, type);
                 item.setItemMeta(meta);
                 player.sendMessage(Component.text("Leveled weapon up to level " + level + "!").color(NamedTextColor.GOLD));
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
@@ -192,7 +192,7 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                         meta.addEnchant(enchantment, newLevel, true);
                     }
                 }
-                LevelManager.updateLore(meta, level, LevelManager.getXpForNextLevel(level), 0, maxLevel);
+                LevelManager.updateLore(meta, type);
                 item.setItemMeta(meta);
                 player.sendMessage(Component.text("Leveled tool up to level " + level + "!").color(NamedTextColor.GOLD));
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);

@@ -67,7 +67,7 @@ public class LevelManager {
         meta.getPersistentDataContainer().set(Keys.TOOL_XP, PersistentDataType.INTEGER, currentXp);
         meta.getPersistentDataContainer().set(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, currentLevel);
 
-        updateLore(meta, currentLevel, xpForNext, currentXp, maxLevel);
+        updateLore(meta, type);
         item.setItemMeta(meta);
     }
 
@@ -122,7 +122,7 @@ public class LevelManager {
         meta.getPersistentDataContainer().set(Keys.WEAPON_XP, PersistentDataType.INTEGER, currentXp);
         meta.getPersistentDataContainer().set(Keys.WEAPON_LEVEL, PersistentDataType.INTEGER, currentLevel);
 
-        updateLore(meta, currentLevel, xpForNext, currentXp, maxLevel);
+        updateLore(meta, type);
         item.setItemMeta(meta);
         if(currentLevel < maxLevel){
             ActionBarUtil.sendXpActionBar(player, currentXp, xpForNext, currentLevel, true);
@@ -132,7 +132,7 @@ public class LevelManager {
 
     public static int getXpForNextLevel(int currentLevel) {
         int requiredXpBase = ToolsSettings.getInstance().getRequiredXpBase();
-        double requiredXpMultiplier = ToolsSettings.getInstance().getXpGainMultiplier();
+        double requiredXpMultiplier = ToolsSettings.getInstance().getRequiredXpMultiplier();
         if(currentLevel == 0){
             return requiredXpBase;
         } else {
@@ -140,23 +140,37 @@ public class LevelManager {
         }
     }
 
-    public static void updateLore(ItemMeta meta, int level, int xpForNext, int currentXp, int maxLevel) {
+    public static void updateLore(ItemMeta meta, ToolType type) {
         String itemRarity;
         NamedTextColor rarityColor;
+        int Level = 0;
+        int CurrentXp = 0;
 
-        if (level >= maxLevel) {
+
+        if (type.isWeapon()) {
+            Level = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_LEVEL, PersistentDataType.INTEGER, 0);
+            CurrentXp = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_XP, PersistentDataType.INTEGER, 0);
+        } else {
+            Level = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 0);
+            CurrentXp = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
+        }
+
+        int XpForNext = getXpForNextLevel(Level);
+        int MaxLevel = ToolsSettings.getInstance().getMaxLevel();
+
+        if (Level >= MaxLevel) {
             itemRarity = "\u272E\u272E\u272E\u272E\u272E"; // ✮✮✮✮✮
             rarityColor = NamedTextColor.GOLD;
-        } else if (level >= maxLevel * 4 / 5) {
+        } else if (Level >= MaxLevel * 4 / 5) {
             itemRarity = "\u272E\u272E\u272E\u272E\u2606";
             rarityColor = NamedTextColor.LIGHT_PURPLE;
-        } else if (level >= maxLevel * 3 / 5) {
+        } else if (Level >= MaxLevel * 3 / 5) {
             itemRarity = "\u272E\u272E\u272E\u2606\u2606";
             rarityColor = NamedTextColor.BLUE;
-        } else if (level >= maxLevel * 2 / 5) {
+        } else if (Level >= MaxLevel * 2 / 5) {
             itemRarity = "\u272E\u272E\u2606\u2606\u2606";
             rarityColor = NamedTextColor.AQUA;
-        } else if (level >= maxLevel / 5) {
+        } else if (Level >= MaxLevel / 5) {
             itemRarity = "\u272E\u2606\u2606\u2606\u2606";
             rarityColor = NamedTextColor.GREEN;
         } else {
@@ -166,10 +180,10 @@ public class LevelManager {
 
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text(itemRarity).color(rarityColor));
-        lore.add(Component.text("Level: " + level + "/" + maxLevel).color(NamedTextColor.AQUA));
+        lore.add(Component.text("Level: " + Level + "/" + MaxLevel).color(NamedTextColor.AQUA));
 
-        if (level < maxLevel) {
-            lore.add(Component.text("XP: " + currentXp + "/" + xpForNext).color(NamedTextColor.GREEN));
+        if (Level < MaxLevel) {
+            lore.add(Component.text("XP: " + CurrentXp + "/" + XpForNext).color(NamedTextColor.GREEN));
         }
 
         meta.lore(lore);
