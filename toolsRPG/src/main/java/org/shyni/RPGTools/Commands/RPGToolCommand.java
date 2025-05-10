@@ -16,10 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.shyni.RPGTools.util.Keys;
-import org.shyni.RPGTools.util.LevelManager;
-import org.shyni.RPGTools.util.MobXpData;
-import org.shyni.RPGTools.util.ToolType;
+import org.shyni.RPGTools.util.*;
 import org.shyni.RPGTools.Settings.ToolsSettings;
 
 import java.util.List;
@@ -40,6 +37,7 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
             }
             ToolsSettings.getInstance().load();
             MobXpData.getInstance().load();
+            BlockXpData.getInstance().load();
             sender.sendMessage(Component.text("RPGTools reloaded!").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD));
             return true;
         }

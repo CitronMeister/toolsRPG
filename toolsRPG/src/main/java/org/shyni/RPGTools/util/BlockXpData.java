@@ -1,126 +1,86 @@
 package org.shyni.RPGTools.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.shyni.RPGTools.RPGTools;
 
+import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class BlockXpData {
 
-    private static final Map<ToolType, Map<Material, Double>> xpMap = new HashMap<>();
+    private static final BlockXpData instance = new BlockXpData();
 
-    public static void register(ToolType toolType, Material block, double xpMultiplier) {
-        xpMap.computeIfAbsent(toolType, k -> new HashMap<>()).put(block, xpMultiplier);
+    private final Map<ToolType, Map<Material, Double>> xpMap = new HashMap<>();
+
+    private File file;
+    private YamlConfiguration config;
+
+    private BlockXpData() {}
+
+    public void load() {
+        file = new File(RPGTools.getInstance().getDataFolder(), "blocks.yml");
+
+        if (!file.exists()) {
+            RPGTools.getInstance().saveResource("blocks.yml", false);
+        }
+
+        config = new YamlConfiguration();
+        config.options().parseComments(true);
+
+        try {
+            config.load(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+        for (String toolKey : config.getKeys(false)) {
+            ToolType toolType;
+            try {
+                toolType = ToolType.valueOf(toolKey.toUpperCase());
+            } catch (IllegalArgumentException ex) {
+                Bukkit.getLogger().warning("[RPGTools] Invalid tool type in blocks.yml: " + toolKey);
+                continue;
+            }
+
+            ConfigurationSection section = config.getConfigurationSection(toolKey);
+            if (section == null) continue;
+
+            Map<Material, Double> toolBlocks = new HashMap<>();
+            for (String blockKey : section.getKeys(false)) {
+                Material mat = Material.getMaterial(blockKey.toUpperCase());
+                if (mat != null) {
+                    toolBlocks.put(mat, section.getDouble(blockKey));
+                } else {
+                    Bukkit.getLogger().warning("[RPGTools] Invalid block material in blocks.yml: " + blockKey);
+                }
+            }
+
+            xpMap.put(toolType, toolBlocks);
+        }
+
+        Bukkit.getLogger().info("[RPGTools] Block XP data loaded.");
     }
 
-    public static boolean shouldGiveXp(Material tool, Material block) {
-        ToolType toolType = ToolType.fromMaterial(tool);
-        if (toolType == null) return false;
-
-        return xpMap.getOrDefault(toolType, Map.of()).containsKey(block);
+    public boolean shouldGiveXp(Material tool, Material block) {
+        ToolType type = ToolType.fromMaterial(tool);
+        return type != null && xpMap.getOrDefault(type, Collections.emptyMap()).containsKey(block);
     }
 
-    public static int getXpMultiplier(Material tool, Material block) {
-        ToolType toolType = ToolType.fromMaterial(tool);
-        if (toolType == null) return 0;
+    public int getXpMultiplier(Material tool, Material block) {
+        ToolType type = ToolType.fromMaterial(tool);
+        if (type == null) return 0;
 
-        double multiplier = xpMap.getOrDefault(toolType, Map.of()).getOrDefault(block, 0.0);
-        return (int) Math.round(multiplier);
+        double value = xpMap.getOrDefault(type, Collections.emptyMap()).getOrDefault(block, 0.0);
+        return (int) Math.round(value);
     }
 
-    static {
-        /* TODO LIST:
-            1. add all default blocks ✓
-            2. add ability to add more in a config file
-
-        * */
-        // Example registrations:
-
-        //Pickaxe stones
-        register(ToolType.PICKAXE, Material.STONE, 1.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE, 1.0);
-
-        register(ToolType.PICKAXE, Material.GRANITE, 1.0);
-        register(ToolType.PICKAXE, Material.DIORITE, 1.0);
-        register(ToolType.PICKAXE, Material.ANDESITE, 1.0);
-        register(ToolType.PICKAXE, Material.TUFF, 1.0);
-        register(ToolType.PICKAXE, Material.CALCITE, 1.0);
-        register(ToolType.PICKAXE, Material.DRIPSTONE_BLOCK, 1.0);
-
-        register(ToolType.PICKAXE, Material.SANDSTONE, 1.0);
-        register(ToolType.PICKAXE, Material.RED_SANDSTONE, 1.0);
-        register(ToolType.PICKAXE, Material.OBSIDIAN, 5.0);
-        register(ToolType.PICKAXE, Material.TERRACOTTA, 1.0);
-        register(ToolType.PICKAXE, Material.NETHERRACK, 1.0);
-        register(ToolType.PICKAXE, Material.END_STONE, 1.0);
-        register(ToolType.PICKAXE, Material.BLACKSTONE, 1.0);
-        register(ToolType.PICKAXE, Material.BASALT, 1.0);
-        register(ToolType.PICKAXE, Material.SMOOTH_BASALT, 1.0);
-
-        //Pickaxe ores
-        register(ToolType.PICKAXE, Material.COAL_ORE, 5.0);
-        register(ToolType.PICKAXE, Material.IRON_ORE, 10.0);
-        register(ToolType.PICKAXE, Material.GOLD_ORE, 10.0);
-        register(ToolType.PICKAXE, Material.DIAMOND_ORE, 50.0);
-        register(ToolType.PICKAXE, Material.EMERALD_ORE, 75.0);
-        register(ToolType.PICKAXE, Material.LAPIS_ORE, 5.0);
-        register(ToolType.PICKAXE, Material.REDSTONE_ORE, 5.0);
-        register(ToolType.PICKAXE, Material.COPPER_ORE, 5.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_COPPER_ORE, 6.0);
-        register(ToolType.PICKAXE, Material.NETHER_QUARTZ_ORE, 6.0);
-        register(ToolType.PICKAXE, Material.ANCIENT_DEBRIS, 100.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_COAL_ORE, 6.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_IRON_ORE, 12.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_GOLD_ORE, 12.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_DIAMOND_ORE, 60.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_EMERALD_ORE, 90.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_LAPIS_ORE, 6.0);
-        register(ToolType.PICKAXE, Material.DEEPSLATE_REDSTONE_ORE, 6.0);
-        register(ToolType.PICKAXE, Material.NETHER_GOLD_ORE, 3.0);
-
-        // AXE
-        register(ToolType.AXE, Material.OAK_LOG, 10.0);
-        register(ToolType.AXE, Material.SPRUCE_LOG, 10.0);
-        register(ToolType.AXE, Material.BIRCH_LOG, 10.0);
-        register(ToolType.AXE, Material.JUNGLE_LOG, 10.0);
-        register(ToolType.AXE, Material.ACACIA_LOG, 10.0);
-        register(ToolType.AXE, Material.DARK_OAK_LOG, 10.0);
-        register(ToolType.AXE, Material.MANGROVE_LOG, 10.0);
-        register(ToolType.AXE, Material.CHERRY_LOG, 10.0);
-        register(ToolType.AXE, Material.PALE_OAK_LOG, 10.0);
-        register(ToolType.AXE, Material.BAMBOO, 5.0);
-        register(ToolType.AXE, Material.CRIMSON_STEM, 12.0);
-        register(ToolType.AXE, Material.WARPED_STEM, 12.0);
-        register(ToolType.AXE, Material.MELON, 3.0);
-        register(ToolType.AXE, Material.PUMPKIN, 3.0);
-
-        // SHOVEL
-        register(ToolType.SHOVEL, Material.GRASS_BLOCK, 2.0);
-        register(ToolType.SHOVEL, Material.COARSE_DIRT, 1.0);
-        register(ToolType.SHOVEL, Material.DIRT_PATH, 1.0);
-        register(ToolType.SHOVEL, Material.MUD, 2.0);
-        register(ToolType.SHOVEL, Material.MYCELIUM, 2.0);
-        register(ToolType.SHOVEL, Material.PODZOL, 2.0);
-        register(ToolType.SHOVEL, Material.RED_SAND, 2.0);
-        register(ToolType.SHOVEL, Material.SAND, 1.0);
-        register(ToolType.SHOVEL, Material.SNOW_BLOCK, 1.0);
-        register(ToolType.SHOVEL, Material.SOUL_SAND, 5.0);
-        register(ToolType.SHOVEL, Material.SOUL_SOIL, 5.0);
-        register(ToolType.SHOVEL, Material.DIRT, 1.0);
-        register(ToolType.SHOVEL, Material.GRAVEL, 2.0);
-
-        // HOE
-        register(ToolType.HOE, Material.SHORT_GRASS, 1.0);
-        register(ToolType.HOE, Material.TALL_GRASS, 2.0);
-        register(ToolType.HOE, Material.SCULK, 3.0);
-        register(ToolType.HOE, Material.SCULK_SHRIEKER, 10.0);
-        register(ToolType.HOE, Material.SCULK_SENSOR, 6.0);
-        register(ToolType.HOE, Material.SCULK_CATALYST, 10.0);
-        register(ToolType.HOE, Material.NETHER_WART_BLOCK, 4.0);
-        register(ToolType.HOE, Material.WARPED_WART_BLOCK, 4.0);
-        register(ToolType.HOE, Material.SHROOMLIGHT, 4.0);
-        register(ToolType.HOE, Material.HAY_BLOCK, 2.0);
-        register(ToolType.HOE, Material.MOSS_BLOCK, 2.0);
+    public static BlockXpData getInstance() {
+        return instance;
     }
 }
-

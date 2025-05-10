@@ -39,7 +39,7 @@ public class LevelManager {
             meta.displayName(updatedName);
         }
 
-        currentXp += BlockXpData.getXpMultiplier(tool, block) * ToolsSettings.getInstance().getXpGainMultiplier();
+        currentXp += BlockXpData.getInstance().getXpMultiplier(tool, block) * ToolsSettings.getInstance().getXpGainMultiplier();
         int xpForNext = getXpForNextLevel(currentLevel);
 
         if (currentLevel < maxLevel && currentXp >= xpForNext) {
@@ -143,34 +143,34 @@ public class LevelManager {
     public static void updateLore(ItemMeta meta, ToolType type) {
         String itemRarity;
         NamedTextColor rarityColor;
-        int Level = 0;
-        int CurrentXp = 0;
+        int level = 0;
+        int currentXp = 0;
 
 
         if (type.isWeapon()) {
-            Level = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_LEVEL, PersistentDataType.INTEGER, 0);
-            CurrentXp = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_XP, PersistentDataType.INTEGER, 0);
+            level = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_LEVEL, PersistentDataType.INTEGER, 0);
+            currentXp = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_XP, PersistentDataType.INTEGER, 0);
         } else {
-            Level = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 0);
-            CurrentXp = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
+            level = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, 0);
+            currentXp = meta.getPersistentDataContainer().getOrDefault(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
         }
 
-        int XpForNext = getXpForNextLevel(Level);
-        int MaxLevel = ToolsSettings.getInstance().getMaxLevel();
+        int xpForNext = getXpForNextLevel(level);
+        int maxLevel = ToolsSettings.getInstance().getMaxLevel();
 
-        if (Level >= MaxLevel) {
+        if (level >= maxLevel) {
             itemRarity = "\u272E\u272E\u272E\u272E\u272E"; // ✮✮✮✮✮
             rarityColor = NamedTextColor.GOLD;
-        } else if (Level >= MaxLevel * 4 / 5) {
+        } else if (level >= maxLevel * 4 / 5) {
             itemRarity = "\u272E\u272E\u272E\u272E\u2606";
             rarityColor = NamedTextColor.LIGHT_PURPLE;
-        } else if (Level >= MaxLevel * 3 / 5) {
+        } else if (level >= maxLevel * 3 / 5) {
             itemRarity = "\u272E\u272E\u272E\u2606\u2606";
             rarityColor = NamedTextColor.BLUE;
-        } else if (Level >= MaxLevel * 2 / 5) {
+        } else if (level >= maxLevel * 2 / 5) {
             itemRarity = "\u272E\u272E\u2606\u2606\u2606";
             rarityColor = NamedTextColor.AQUA;
-        } else if (Level >= MaxLevel / 5) {
+        } else if (level >= maxLevel / 5) {
             itemRarity = "\u272E\u2606\u2606\u2606\u2606";
             rarityColor = NamedTextColor.GREEN;
         } else {
@@ -180,10 +180,10 @@ public class LevelManager {
 
         List<Component> lore = new ArrayList<>();
         lore.add(Component.text(itemRarity).color(rarityColor));
-        lore.add(Component.text("Level: " + Level + "/" + MaxLevel).color(NamedTextColor.AQUA));
+        lore.add(Component.text("level: " + level + "/" + maxLevel).color(NamedTextColor.AQUA));
 
-        if (Level < MaxLevel) {
-            lore.add(Component.text("XP: " + CurrentXp + "/" + XpForNext).color(NamedTextColor.GREEN));
+        if (level < maxLevel) {
+            lore.add(Component.text("XP: " + currentXp + "/" + xpForNext).color(NamedTextColor.GREEN));
         }
 
         meta.lore(lore);

@@ -20,7 +20,7 @@ public class BlockBreakListener implements Listener {
         Material block = event.getBlock().getType();
         Material tool = player.getInventory().getItemInMainHand().getType();
 
-        if(BlockXpData.shouldGiveXp(tool, block)) {
+        if(BlockXpData.getInstance().shouldGiveXp(tool, block)) {
             LevelManager.updateToolItem(player, tool, block);
             ItemStack item = player.getInventory().getItemInMainHand();
             ItemMeta meta = item.getItemMeta();
