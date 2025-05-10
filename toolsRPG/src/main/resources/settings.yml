@@ -1,9 +1,46 @@
-# Maximum level for a tool only whole numbers (e.g 5, 12, 21, 25, 100)
-# default = 20
+# RPGTools - XP Configuration
+# ==================================
+
+# XP Calculation System:
+#
+# 1. Level-Up Requirements:
+#    XP Needed = required-xp-base × (required-xp-multiplier ^ currentLevel)
+#    (required-xp-base is used in ALL level calculations)
+#
+# 2. Actual XP Gain:
+#    XP Received = (Base Mob/Block XP) × xp-gain-multiplier
+
+
+# CORE PROGRESSION VALUES
+# -----------------------
+# The fundamental XP unit used in ALL level calculations
+required-xp-base: 100
+
+# Exponential growth factor (applied per level)
+# Formula: required-xp-base × (this ^ currentLevel)
+required-xp-multiplier: 1.6
+
+# GLOBAL MODIFIER
+# -----------------------
+# Multiplies ALL XP gained from all sources
+# Must be whole number (e.g. 1, 5, 10)
+# 1 = Normal, >1 = Faster
+xp-gain-multiplier: 1
+
+# MAXIMUM LEVEL CAP
+# -----------------------
+# Highest attainable level for tools/weapons
+# Must be whole number (e.g. 10, 20, 50)
+# Note: Higher levels require exponentially more XP
 max-level: 20
-# XP multiplier only whole numbers (e.g 5, 12, 21, 25, 100)
-# default = 1
-default-xp-multiplier: 1
+
+# Example Progression (required-xp-base: 100, global-xp-multiplier: 1.6, max-level: 20):
+#   L0→1: 100 × 1.6⁰ = 100 XP
+#   L1→2: 100 × 1.6¹ = 160 XP
+#   L2→3: 100 × 1.6² = 256 XP
+#   L3→4: 100 × 1.6³ ≈ 410 XP
+#   ...
+#   L19→20: 100 × 1.6¹⁹ ≈ 755.578 XP
 
 
 # input any enchantment from the following list: https://jd.papermc.io/paper/1.21.5/org/bukkit/enchantments/Enchantment.html

@@ -17,7 +17,9 @@ public class ToolsSettings {
     private YamlConfiguration config;
 
     private int maxLevel;
-    private double defaultXpMultiplier;
+    private int xpGainMultiplier;
+    private double requiredXpMultiplier;
+    private int requiredXpBase;
 
     // Tool-specific level enchantments
     private final Map<ToolType, Map<Integer, Map<Enchantment, Integer>>> levelEnchantments = new HashMap<>();
@@ -41,7 +43,9 @@ public class ToolsSettings {
         }
 
         maxLevel = config.getInt("max-level", 10);
-        defaultXpMultiplier = config.getDouble("default-xp-multiplier", 1.0);
+        xpGainMultiplier = config.getInt("xp-gain-multiplier", 1);
+        requiredXpMultiplier = config.getDouble("required-xp-multiplier", 1.6);
+        requiredXpBase = config.getInt("required-xp-base", 100);
 
         // Load enchantments
         ConfigurationSection root = config.getConfigurationSection("Level_Enchantments");
@@ -116,8 +120,15 @@ public class ToolsSettings {
         return maxLevel;
     }
 
-    public double getDefaultXpMultiplier() {
-        return defaultXpMultiplier;
+    public int getXpGainMultiplier() {
+        return xpGainMultiplier;
+    }
+
+    public double getRequiredXpMultiplier() {
+        return requiredXpMultiplier;
+    }
+    public int getRequiredXpBase() {
+        return requiredXpBase;
     }
 
     public static ToolsSettings getInstance() {

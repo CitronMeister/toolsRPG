@@ -39,7 +39,7 @@ public class LevelManager {
             meta.displayName(updatedName);
         }
 
-        currentXp += BlockXpData.getXpMultiplier(tool, block) * (int) Math.floor(ToolsSettings.getInstance().getDefaultXpMultiplier());
+        currentXp += BlockXpData.getXpMultiplier(tool, block) * ToolsSettings.getInstance().getXpGainMultiplier();
         int xpForNext = getXpForNextLevel(currentLevel);
 
         if (currentLevel < maxLevel && currentXp >= xpForNext) {
@@ -84,7 +84,7 @@ public class LevelManager {
         int maxLevel = ToolsSettings.getInstance().getMaxLevel();
 
         // Gain XP based on killed entity type (placeholder)
-        currentXp += MobXpData.getInstance().getXpForMob(killedType.getType()); // TODO: Use real XP value from entity
+        currentXp += MobXpData.getInstance().getXpForMob(killedType.getType()) * ToolsSettings.getInstance().getXpGainMultiplier();
 
         if (currentLevel >= maxLevel) {
             Component displayName = meta.hasDisplayName()
@@ -131,10 +131,12 @@ public class LevelManager {
     }
 
     public static int getXpForNextLevel(int currentLevel) {
+        int requiredXpBase = ToolsSettings.getInstance().getRequiredXpBase();
+        double requiredXpMultiplier = ToolsSettings.getInstance().getXpGainMultiplier();
         if(currentLevel == 0){
-            return 100;
+            return requiredXpBase;
         } else {
-            return (int) Math.floor(100 * Math.pow(1.6, currentLevel));
+            return (int) Math.floor(requiredXpBase * Math.pow(requiredXpMultiplier, currentLevel));
         }
     }
 
