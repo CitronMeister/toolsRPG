@@ -33,6 +33,10 @@ permissions:
     description: "Allows access to /rpgtools help"
     default: true  # All players can use help by default
 
+  rpgtools.premium:
+    description: "gives an extra XP multiplier"
+    default: false
+
   rpgtools.admin:
     description: "Allows access to admin subcommands like /rpgtools levelup and /rpgtools givexp"
     default: op  # Only server ops by default

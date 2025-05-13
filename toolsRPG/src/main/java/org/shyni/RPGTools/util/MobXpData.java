@@ -1,9 +1,7 @@
 package org.shyni.RPGTools.util;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.shyni.RPGTools.RPGTools;
 
 import java.io.File;

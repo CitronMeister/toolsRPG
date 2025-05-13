@@ -39,8 +39,12 @@ public class LevelManager {
             Component updatedName = displayName.color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD);
             meta.displayName(updatedName);
         }
+        if (player.hasPermission("rpgtools.premium")) {
+            currentXp += BlockXpSettings.getInstance().getXpMultiplier(tool, block) * (ToolsSettings.getInstance().getXpGainMultiplier() + ToolsSettings.getInstance().getPremiumXpGainMultiplier());
+        } else {
+            currentXp += BlockXpSettings.getInstance().getXpMultiplier(tool, block) * ToolsSettings.getInstance().getXpGainMultiplier();
+        }
 
-        currentXp += BlockXpSettings.getInstance().getXpMultiplier(tool, block) * ToolsSettings.getInstance().getXpGainMultiplier();
         int xpForNext = getXpForNextLevel(currentLevel);
 
         if (currentLevel < maxLevel && currentXp >= xpForNext) {
@@ -90,7 +94,13 @@ public class LevelManager {
         int maxLevel = ToolsSettings.getInstance().getMaxLevel();
 
         // Gain XP based on killed entity type (placeholder)
-        currentXp += MobXpData.getInstance().getXpForMob(killedType.getType()) * ToolsSettings.getInstance().getXpGainMultiplier();
+
+        if(player.hasPermission("rpgtools.premium")){
+            currentXp += MobXpData.getInstance().getXpForMob(killedType.getType()) * (ToolsSettings.getInstance()
+                    .getXpGainMultiplier() + ToolsSettings.getInstance().getPremiumXpGainMultiplier());
+        } else {
+            currentXp += MobXpData.getInstance().getXpForMob(killedType.getType()) * ToolsSettings.getInstance().getXpGainMultiplier();
+        }
 
         if (currentLevel >= maxLevel) {
             Component displayName = meta.hasDisplayName()

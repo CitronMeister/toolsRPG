@@ -10,7 +10,6 @@
 # 2. Actual XP Gain:
 #    XP Received = (Base Mob/Block XP) × xp-gain-multiplier
 
-
 # CORE PROGRESSION VALUES
 # -----------------------
 # The fundamental XP unit used in ALL level calculations
@@ -26,6 +25,25 @@ required-xp-multiplier: 1.6
 # Must be whole number (e.g. 1, 5, 10)
 # 1 = Normal, >1 = Faster
 xp-gain-multiplier: 1
+
+# Premium XP Modifier (Permission-Based Bonus)
+# -------------------------------------------
+# This setting provides an additional XP multiplier exclusively for players
+# with the 'rpgtools.premium' permission.
+#
+# Calculation:
+#   XP Received = (Base XP) × (xp-gain-multiplier + premium-xp-gain-multiplier)
+#
+# Example:
+#   Base XP: 10
+#   Regular multiplier: 1.0
+#   Premium multiplier: 2.0
+#   → Premium player: 10 × (1 + 2) = 30 XP
+#   → Regular player: 10 × 1 = 10 XP
+#
+# Note: This bonus stacks additively with the main xp-gain-multiplier.
+premium-xp-gain-multiplier: 1
+
 
 # MAXIMUM LEVEL CAP
 # -----------------------
