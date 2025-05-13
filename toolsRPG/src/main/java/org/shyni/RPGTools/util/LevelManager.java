@@ -2,7 +2,9 @@ package org.shyni.RPGTools.util;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
@@ -76,7 +78,7 @@ public class LevelManager {
         item.setItemMeta(meta);
         // Send actionbar
         if(currentLevel < maxLevel){
-            ActionBarUtil.sendXpActionBar(player, currentXp, xpForNext, currentLevel, true);
+            ActionBarUtil.sendXpActionBar(player, currentXp, xpForNext, currentLevel);
         }
 
     }
@@ -141,7 +143,7 @@ public class LevelManager {
         updateLore(meta, type);
         item.setItemMeta(meta);
         if(currentLevel < maxLevel){
-            ActionBarUtil.sendXpActionBar(player, currentXp, xpForNext, currentLevel, true);
+            ActionBarUtil.sendXpActionBar(player, currentXp, xpForNext, currentLevel);
         }
 
     }
@@ -158,9 +160,14 @@ public class LevelManager {
 
     public static void updateLore(ItemMeta meta, ToolType type) {
         String itemRarity;
-        NamedTextColor rarityColor;
+        String rarityColor;
         int level = 0;
         int currentXp = 0;
+        List<String> levelColours = ToolsSettings.getInstance().getXpAndLevelColours();
+        List<String> rarityColours = ToolsSettings.getInstance().getLoreRarityColours();
+
+        String symbol1 = ToolsSettings.getInstance().getLoreRaritySymbol1();
+        String symbol2 = ToolsSettings.getInstance().getLoreRaritySymbol2();
 
 
         if (type.isWeapon()) {
@@ -175,31 +182,42 @@ public class LevelManager {
         int maxLevel = ToolsSettings.getInstance().getMaxLevel();
 
         if (level >= maxLevel) {
-            itemRarity = "\u272E\u272E\u272E\u272E\u272E"; // ✮✮✮✮✮
-            rarityColor = NamedTextColor.GOLD;
+            itemRarity = symbol1+symbol1+symbol1+symbol1+symbol1; // ✮✮✮✮✮
+            rarityColor = rarityColours.get(5);
         } else if (level >= maxLevel * 4 / 5) {
-            itemRarity = "\u272E\u272E\u272E\u272E\u2606";
-            rarityColor = NamedTextColor.LIGHT_PURPLE;
+            itemRarity = symbol1+symbol1+symbol1+symbol1+symbol2;
+            rarityColor = rarityColours.get(4);
         } else if (level >= maxLevel * 3 / 5) {
-            itemRarity = "\u272E\u272E\u272E\u2606\u2606";
-            rarityColor = NamedTextColor.BLUE;
+            itemRarity = symbol1+symbol1+symbol1+symbol2+symbol2;
+            rarityColor = rarityColours.get(3);
         } else if (level >= maxLevel * 2 / 5) {
-            itemRarity = "\u272E\u272E\u2606\u2606\u2606";
-            rarityColor = NamedTextColor.AQUA;
+            itemRarity = symbol1+symbol1+symbol2+symbol2+symbol2;
+            rarityColor = rarityColours.get(2);
         } else if (level >= maxLevel / 5) {
-            itemRarity = "\u272E\u2606\u2606\u2606\u2606";
-            rarityColor = NamedTextColor.GREEN;
+            itemRarity = symbol1+symbol2+symbol2+symbol2+symbol2;
+            rarityColor = rarityColours.get(1);
         } else {
-            itemRarity = "\u2606\u2606\u2606\u2606\u2606";
-            rarityColor = NamedTextColor.GRAY;
+            itemRarity = symbol2+symbol2+symbol2+symbol2+symbol2;
+            rarityColor = rarityColours.getFirst();
         }
 
         List<Component> lore = new ArrayList<>();
-        lore.add(Component.text(itemRarity).color(rarityColor));
-        lore.add(Component.text("level: " + level + "/" + maxLevel).color(NamedTextColor.AQUA));
+        lore.add(Component.text(itemRarity, TextColor.fromHexString(rarityColor)));
+        if(level < maxLevel){
+            lore.add(Component.text("level: " + level + "/" + maxLevel, TextColor.fromHexString(levelColours.getFirst())));
+        } else {
+            lore.add(Component.text("level: " + level + "/" + maxLevel, TextColor.fromHexString(levelColours.get(5))));
+        }
+
 
         if (level < maxLevel) {
-            lore.add(Component.text("XP: " + currentXp + "/" + xpForNext).color(NamedTextColor.GREEN));
+            Component xpLine = Component.text()
+                    .append(Component.text("XP: ", TextColor.fromHexString(levelColours.get(1))))
+                    .append(Component.text(currentXp, TextColor.fromHexString(levelColours.get(2))))
+                    .append(Component.text("/", TextColor.fromHexString(levelColours.get(3))))
+                    .append(Component.text(xpForNext, TextColor.fromHexString(levelColours.get(4))))
+                    .build();
+            lore.add(xpLine);
         }
 
         meta.lore(lore);

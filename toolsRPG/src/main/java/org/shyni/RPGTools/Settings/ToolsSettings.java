@@ -21,6 +21,12 @@ public class ToolsSettings {
     private double requiredXpMultiplier;
     private int requiredXpBase;
     private int premiumXpGainMultiplier;
+    private String loreRaritySymbol1;
+    private String loreRaritySymbol2;
+    private List<String> loreRarityColours;
+    private List<String> xpAndLevelColours;
+    private String actionBarStyle;
+
 
     // Tool-specific level enchantments
     private final Map<ToolType, Map<Integer, Map<Enchantment, Integer>>> levelEnchantments = new HashMap<>();
@@ -48,7 +54,19 @@ public class ToolsSettings {
         premiumXpGainMultiplier = config.getInt("premium-xp-gain-multiplier", 1);
         requiredXpMultiplier = config.getDouble("required-xp-multiplier", 1.6);
         requiredXpBase = config.getInt("required-xp-base", 100);
+        actionBarStyle = config.getString("action-bar-style", "full");
 
+        loreRaritySymbol1 = config.getString("lore-rarity-symbol-1", "★");
+        loreRaritySymbol2 = config.getString("lore-rarity-symbol-2", "☆");
+
+
+        loreRarityColours = Optional.of(config.getStringList("lore-colours"))
+                .filter(list -> !list.isEmpty())
+                .orElse(Arrays.asList("#AAAAAA", "#55FF55", "#55FFFF", "#5555FF", "#FF55FF", "#FFAA00"));
+
+        xpAndLevelColours = Optional.of(config.getStringList("xp-and-level-colours"))
+                .filter(list -> !list.isEmpty())
+                .orElse(Arrays.asList("#555555", "#5555FF", "#55FF55", "#ffffff", "#55FFFF", "#AA0000"));
 
         // Load enchantments
         ConfigurationSection root = config.getConfigurationSection("Level_Enchantments");
@@ -136,6 +154,22 @@ public class ToolsSettings {
     }
     public int getRequiredXpBase() {
         return requiredXpBase;
+    }
+
+    public String getLoreRaritySymbol1() {
+        return loreRaritySymbol1;
+    }
+    public String getLoreRaritySymbol2() {
+        return loreRaritySymbol2;
+    }
+    public List<String> getLoreRarityColours() {
+        return loreRarityColours;
+    }
+    public List<String> getXpAndLevelColours() {
+        return xpAndLevelColours;
+    }
+    public String getActionBarStyle() {
+        return actionBarStyle;
     }
 
     public static ToolsSettings getInstance() {

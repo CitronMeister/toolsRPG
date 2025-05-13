@@ -60,6 +60,72 @@ max-level: 20
 #   ...
 #   L19→20: 100 × 1.6¹⁹ ≈ 755.578 XP
 
+# LORE FORMATTING
+# -------------------------
+
+# Lore rarity symbols by default these are stars
+# defaults are the stars: ✮ & ☆
+lore-rarity-symbol-1: ✮
+lore-rarity-symbol-2: ☆
+
+# Lore Rarity Color Settings
+# -------------------------
+# Defines the color codes used for different rarity tiers in item lore.
+# These colors will be applied to items based on their rarity level.
+#
+# Format:
+#   - Each position in the list represents a rarity tier (0 = most common)
+#   - Use hex color codes (#RRGGBB)
+#   - List should be ordered from most common to rarest
+#
+# Default Gradient Example:
+lore-rarity-colours:
+  - "#AAAAAA"  # Tier 0 - Common (Gray)
+  - "#55FF55"  # Tier 1 - Uncommon (Green)
+  - "#5555FF"  # Tier 2 - Rare (Blue)
+  - "#AA00AA"  # Tier 3 - Epic (Purple)
+  - "#FFAA00"  # Tier 4 - Legendary (Gold)
+  - "#FF5555"  # Tier 5 - Mythic (Red)
+
+# XP and Level Color Settings
+# --------------------------
+# Color codes used for different XP/level related UI elements.
+# Positions correspond to different display contexts.
+#
+# Recommended Structure:
+#   [0] - Level display text (default: yellow)
+#   [1] - XP text Colour (default: blue)
+#   [2] - Current XP (default: green)
+#   [2] - / bar in the middle (default: white)
+#   [4] - XP requirement text (default: aqua)
+#   [5] - Max level achieved color (default: red)
+#
+# Supports hex codes format: (#FFFFFF)
+xp-and-level-colours:
+  - "#FFFF55"  # [0] Level text colour
+  - "#5555FF"  # [1] Xp text colour
+  - "#55FF55"  # [2] Current XP
+  - "#ffffff"  # [3] / bar in the middle
+  - "#FF5555"  # [4] XP requirement text
+  - "#AA0000"  # [5] Level text colour at max level
+
+# Action Bar Display Settings
+# --------------------------
+# Controls how XP/level information appears in the player's action bar.
+#
+# Options:
+#   "full" - Shows complete information:
+#            [Level] [XP Bar] [Current XP]/[XP Needed]
+#            Example: "Level 5 [|||||.....] 250/500 XP"
+#
+#   "simple" - Shows only the XP progress bar:
+#              [XP Bar]
+#              Example: "[|||||.....]"
+#
+#   "none" - Disables action bar display completely
+#
+# Default: full
+action-bar-style: full
 
 # input any enchantment from the following list: https://jd.papermc.io/paper/1.21.5/org/bukkit/enchantments/Enchantment.html
 Level_Enchantments:

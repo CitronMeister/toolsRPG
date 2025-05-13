@@ -1,5 +1,5 @@
 name: RPGTools
-version: '1.0.0'
+version: '1.1.0'
 main: org.shyni.RPGTools.RPGTools
 api-version: '1.21'
 authors: [ Shyni ]
@@ -28,10 +28,6 @@ permissions:
 #  another.permission.node:
 #    description: "this is another description"
 #    default: not op
-
-  rpgtools.use:
-    description: "Allows access to /rpgtools help"
-    default: true  # All players can use help by default
 
   rpgtools.premium:
     description: "gives an extra XP multiplier"
