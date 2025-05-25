@@ -26,6 +26,7 @@ public class ToolsSettings {
     private List<String> loreRarityColours;
     private List<String> xpAndLevelColours;
     private String actionBarStyle;
+    private Boolean repairOnLevelup;
 
 
     // Tool-specific level enchantments
@@ -48,17 +49,20 @@ public class ToolsSettings {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        // level stuff
         maxLevel = config.getInt("max-level", 10);
         xpGainMultiplier = config.getInt("xp-gain-multiplier", 1);
         premiumXpGainMultiplier = config.getInt("premium-xp-gain-multiplier", 1);
         requiredXpMultiplier = config.getDouble("required-xp-multiplier", 1.6);
         requiredXpBase = config.getInt("required-xp-base", 100);
+        repairOnLevelup = config.getBoolean("repair-on-levelup", false);
+
+        // action bar
         actionBarStyle = config.getString("action-bar-style", "full");
 
+        // customisation
         loreRaritySymbol1 = config.getString("lore-rarity-symbol-1", "★");
         loreRaritySymbol2 = config.getString("lore-rarity-symbol-2", "☆");
-
 
         loreRarityColours = Optional.of(config.getStringList("lore-colours"))
                 .filter(list -> !list.isEmpty())
@@ -156,6 +160,8 @@ public class ToolsSettings {
         return requiredXpBase;
     }
 
+    public Boolean getRepairOnLevelup() {return repairOnLevelup;}
+
     public String getLoreRaritySymbol1() {
         return loreRaritySymbol1;
     }
@@ -171,6 +177,7 @@ public class ToolsSettings {
     public String getActionBarStyle() {
         return actionBarStyle;
     }
+
 
     public static ToolsSettings getInstance() {
         return instance;

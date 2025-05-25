@@ -52,6 +52,14 @@ premium-xp-gain-multiplier: 1
 # Note: Higher levels require exponentially more XP
 max-level: 20
 
+# REPAIR ON LEVEL UP
+# ------------------------
+# Should the tool/weapon repair fully on level up?
+# default: false
+repair-on-levelup: true
+
+
+
 # Example Progression (required-xp-base: 100, global-xp-multiplier: 1.6, max-level: 20):
 #   L0→1: 100 × 1.6⁰ = 100 XP
 #   L1→2: 100 × 1.6¹ = 160 XP

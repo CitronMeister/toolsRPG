@@ -12,6 +12,7 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
@@ -79,6 +80,14 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                 xp -= LevelManager.getXpForNextLevel(level);
                 level++;
 
+
+                // repair
+                if (ToolsSettings.getInstance().getRepairOnLevelup()) {
+                    if (meta instanceof Damageable damageable) {
+                        damageable.setDamage(0);
+                    }
+                }
+
                 // Apply new enchantments if any
                 Map<Enchantment, Integer> enchants = ToolsSettings.getInstance()
                         .getEnchantmentsForLevel(type, level);
@@ -142,6 +151,14 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                 meta.getPersistentDataContainer().set(Keys.WEAPON_LEVEL, PersistentDataType.INTEGER, level);
                 meta.getPersistentDataContainer().set(Keys.WEAPON_XP, PersistentDataType.INTEGER, 0);
 
+                // repair
+                if (ToolsSettings.getInstance().getRepairOnLevelup()) {
+                    if (meta instanceof Damageable damageable) {
+                        damageable.setDamage(0);
+                    }
+                }
+
+
                 // Apply enchantments
                 Map<Enchantment, Integer> enchants = ToolsSettings.getInstance()
                         .getEnchantmentsForLevel(ToolType.fromMaterial(item.getType()), level);
@@ -161,6 +178,7 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                 }
                 LevelManager.updateLore(meta, type);
                 item.setItemMeta(meta);
+                player.getInventory().setItemInMainHand(item);
                 player.sendMessage(Component.text("Leveled weapon up to level " + level + "!").color(NamedTextColor.GOLD));
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
 
@@ -174,6 +192,14 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                 meta.getPersistentDataContainer().set(Keys.TOOL_LEVEL, PersistentDataType.INTEGER, level);
                 meta.getPersistentDataContainer().set(Keys.TOOL_XP, PersistentDataType.INTEGER, 0);
 
+                // repair
+                if (ToolsSettings.getInstance().getRepairOnLevelup()) {
+                    if (meta instanceof Damageable damageable) {
+                        damageable.setDamage(0);
+                    }
+                }
+
+
                 // Apply enchantments
                 Map<Enchantment, Integer> enchants = ToolsSettings.getInstance()
                         .getEnchantmentsForLevel(ToolType.fromMaterial(item.getType()), level);
@@ -193,6 +219,7 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                 }
                 LevelManager.updateLore(meta, type);
                 item.setItemMeta(meta);
+                player.getInventory().setItemInMainHand(item);
                 player.sendMessage(Component.text("Leveled tool up to level " + level + "!").color(NamedTextColor.GOLD));
                 player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
 
@@ -220,10 +247,7 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                         Component.text(" - Give XP to your tool/weapon", NamedTextColor.GRAY),
                         Component.newline(),
                         Component.text("/rpgtools reload", NamedTextColor.YELLOW),
-                        Component.text(" - reload the settings.yml", NamedTextColor.GRAY),
-                        Component.newline(),
-                        Component.newline(),
-                        Component.text("Use your tools and weapons to gain XP and unlock custom enchantments as you level up!", NamedTextColor.DARK_GREEN)
+                        Component.text(" - reload the settings.yml", NamedTextColor.GRAY)
                 ));
             } else {
                 sender.sendMessage(Component.textOfChildren(
@@ -235,10 +259,7 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
                         Component.text("Commands:", NamedTextColor.GOLD, TextDecoration.BOLD),
                         Component.newline(),
                         Component.text("/rpgtools help", NamedTextColor.YELLOW),
-                        Component.text(" - Show this help menu", NamedTextColor.GRAY),
-                        Component.newline(),
-                        Component.newline(),
-                        Component.text("Use your tools and weapons to gain XP and unlock custom enchantments as you level up!", NamedTextColor.DARK_GREEN)
+                        Component.text(" - Show this help menu", NamedTextColor.GRAY)
                 ));
             }
             return true;
@@ -264,7 +285,7 @@ public class RPGToolCommand implements CommandExecutor, TabExecutor {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if(args.length == 1){
             if(sender.hasPermission("rpgtools.admin")){
-                return List.of("reload", "givexp", "levelup");
+                return List.of("reload", "givexp", "levelup", "help");
             } else {return List.of("help");}
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("givexp")) {

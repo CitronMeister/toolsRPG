@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -11,6 +12,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.shyni.RPGTools.Settings.BlockXpSettings;
@@ -53,6 +55,12 @@ public class LevelManager {
             currentXp -= xpForNext;
             currentLevel++;
 
+            if (ToolsSettings.getInstance().getRepairOnLevelup()) {
+                if (meta instanceof Damageable damageable) {
+                    damageable.setDamage(0);
+                }
+            }
+
             Map<Enchantment, Integer> enchants = ToolsSettings.getInstance()
                     .getEnchantmentsForLevel(type, currentLevel);
 
@@ -76,6 +84,7 @@ public class LevelManager {
 
         updateLore(meta, type);
         item.setItemMeta(meta);
+        player.getInventory().setItemInMainHand(item);
         // Send actionbar
         if(currentLevel < maxLevel){
             ActionBarUtil.sendXpActionBar(player, currentXp, xpForNext, currentLevel);
@@ -119,6 +128,12 @@ public class LevelManager {
             currentXp -= xpForNext;
             currentLevel++;
 
+            if (ToolsSettings.getInstance().getRepairOnLevelup()) {
+                if (meta instanceof Damageable damageable) {
+                    damageable.setDamage(0);
+                }
+            }
+
             Map<Enchantment, Integer> enchants = ToolsSettings.getInstance()
                     .getEnchantmentsForLevel(type, currentLevel);
             for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
@@ -142,6 +157,7 @@ public class LevelManager {
 
         updateLore(meta, type);
         item.setItemMeta(meta);
+        player.getInventory().setItemInMainHand(item);
         if(currentLevel < maxLevel){
             ActionBarUtil.sendXpActionBar(player, currentXp, xpForNext, currentLevel);
         }
