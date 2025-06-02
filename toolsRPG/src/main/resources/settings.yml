@@ -56,7 +56,7 @@ max-level: 20
 # ------------------------
 # Should the tool/weapon repair fully on level up?
 # default: false
-repair-on-levelup: true
+repair-on-levelup: false
 
 
 

@@ -6,7 +6,7 @@
 
     <groupId>org.shyni</groupId>
     <artifactId>RPGTools</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <packaging>jar</packaging>
 
     <name>toolsRPG</name>
