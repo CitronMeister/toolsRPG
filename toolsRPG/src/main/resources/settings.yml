@@ -16,7 +16,7 @@
 required-xp-base: 100
 
 # Exponential growth factor (applied per level)
-# Formula: required-xp-base × (this ^ currentLevel)
+# Formula: required-xp-base × (required-xp-multiplier ^ currentLevel)
 required-xp-multiplier: 1.6
 
 # GLOBAL MODIFIER
@@ -1007,6 +1007,7 @@ Level_Enchantments:
       CHANNELING: 1
       IMPALING: 8
       MENDING: 1
+
 ## XP for mob kill
 Mobs:
   #PASSIVE MOBS
@@ -1040,6 +1041,7 @@ Mobs:
   TURTLE: 3
   VILLAGER: 0
   WANDERING_TRADER: 0
+
   #NEUTRAL MOBS
   BEE: 1
   CAVE_SPIDER: 3
@@ -1057,6 +1059,7 @@ Mobs:
   TRADER_LLAMA: 5
   WOLF: 5
   ZOMBIFIED_PIGLIN: 5
+
   #HOSTILE MOBS
   BLAZE: 10
   BOGGED: 10
