@@ -164,6 +164,73 @@ public class LevelManager {
 
     }
 
+    public static void updateThrownWeaponItem(Player player, LivingEntity killedType, ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+
+        ToolType type = ToolType.fromMaterial(item.getType());
+        if (type == null || !type.isWeapon()) return;
+
+        int currentXp = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_XP, PersistentDataType.INTEGER, 0);
+        int currentLevel = meta.getPersistentDataContainer().getOrDefault(Keys.WEAPON_LEVEL, PersistentDataType.INTEGER, 0);
+        int maxLevel = ToolsSettings.getInstance().getMaxLevel();
+
+        if(player.hasPermission("rpgtools.premium")){
+            currentXp += MobXpData.getInstance().getXpForMob(killedType.getType()) * (ToolsSettings.getInstance()
+                    .getXpGainMultiplier() + ToolsSettings.getInstance().getPremiumXpGainMultiplier());
+        } else {
+            currentXp += MobXpData.getInstance().getXpForMob(killedType.getType()) * ToolsSettings.getInstance().getXpGainMultiplier();
+        }
+
+        if (currentLevel >= maxLevel) {
+            Component displayName = meta.hasDisplayName()
+                    ? meta.displayName()
+                    : Component.translatable(item.translationKey());
+            Component updatedName = displayName.color(NamedTextColor.GOLD).decorate(TextDecoration.BOLD);
+            meta.displayName(updatedName);
+        }
+
+        int xpForNext = getXpForNextLevel(currentLevel);
+
+        if (currentLevel < maxLevel && currentXp >= xpForNext) {
+            currentXp -= xpForNext;
+            currentLevel++;
+
+            if (ToolsSettings.getInstance().getRepairOnLevelup()) {
+                if (meta instanceof Damageable damageable) {
+                    damageable.setDamage(0);
+                }
+            }
+
+            Map<Enchantment, Integer> enchants = ToolsSettings.getInstance()
+                    .getEnchantmentsForLevel(type, currentLevel);
+            for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
+                Enchantment enchantment = entry.getKey();
+                int newLevel = entry.getValue();
+                int currentEnchantLevel = meta.hasEnchant(enchantment) ? meta.getEnchantLevel(enchantment) : 0;
+
+                if (newLevel > currentEnchantLevel) {
+                    meta.addEnchant(enchantment, newLevel, true);
+                }
+            }
+
+            player.sendMessage(Component.text("Your weapon leveled up to " + currentLevel + "!")
+                    .color(NamedTextColor.GOLD)
+                    .decorate(TextDecoration.BOLD));
+            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1f, 1f);
+        }
+
+        meta.getPersistentDataContainer().set(Keys.WEAPON_XP, PersistentDataType.INTEGER, currentXp);
+        meta.getPersistentDataContainer().set(Keys.WEAPON_LEVEL, PersistentDataType.INTEGER, currentLevel);
+
+        updateLore(meta, type);
+        item.setItemMeta(meta);
+        
+        if(currentLevel < maxLevel){
+            ActionBarUtil.sendXpActionBar(player, currentXp, xpForNext, currentLevel);
+        }
+    }
+
     public static int getXpForNextLevel(int currentLevel) {
         int requiredXpBase = ToolsSettings.getInstance().getRequiredXpBase();
         double requiredXpMultiplier = ToolsSettings.getInstance().getRequiredXpMultiplier();

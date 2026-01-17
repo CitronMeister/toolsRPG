@@ -5,7 +5,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.shyni.RPGTools.Settings.ToolsSettings;
 
-import java.util.Objects;
 
 public class ActionBarUtil {
 
